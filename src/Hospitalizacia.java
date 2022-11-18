@@ -17,7 +17,7 @@ public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospita
     private boolean bolHospitalizovany = false;
 
     public Hospitalizacia () {
-        id = 0;
+        id = -99;
         d_zaciatku = null;
         d_konca = null;
         diagnoza = "";
@@ -33,6 +33,9 @@ public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospita
             diagnozaLength = diagnoza.length();
 
         //FromByteArray(ToByteArray());
+    }
+    public int getId() {
+        return id;
     }
 
     public void setParBolHospitlizovany(boolean hodnota) {

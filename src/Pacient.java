@@ -10,7 +10,7 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
     private final int maxLengthMeno = 15;
     private int menoLength = 0;
     private int priezviskoLength = 0;
-    private int hospitalizacieLength = 0;
+    //private int hospitalizacieLength = 0;
     private final int maxLengthPriezvisko = 20;
     private final int maxLengthDatumNarodenia = 10;
     private final int maxLengtRodCislo = 10;
@@ -89,11 +89,14 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         do {
             id = r.nextInt(1000);
         } while (idHospitalizacie.contains(id));
-
-        hospitalizacie.add(new Hospitalizacia(id, pD_zaciatku, pD_konca, pDiagnoza));
-        idHospitalizacie.add(id);
-        hospitalizacieLength++;
-        return true;
+        if (idHospitalizacie.size() < 10) {
+            hospitalizacie.add(idHospitalizacie.size(), new Hospitalizacia(id, pD_zaciatku, pD_konca, pDiagnoza));
+            hospitalizacie.remove(hospitalizacie.size() - 1);
+            idHospitalizacie.add(id);
+            return true;
+        } else {
+            return false;
+        }
     }
     public boolean addHospitalizaciaObj(Hospitalizacia h) {
         hospitalizacie.add(h);
@@ -211,7 +214,7 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
                 hlpOutStream.writeChars("----------");
             hlpOutStream.writeInt(poistovna);
             // added Hospitalizacie
-            hlpOutStream.writeInt(hospitalizacie.size());
+            hlpOutStream.writeInt(idHospitalizacie.size()); //number of real hospitalisations
 
             for (int i = 0 ; i < hospitalizacie.size(); i++) {
                 hlpByteArrayOutputStream.writeBytes(hospitalizacie.get(i).ToByteArray());
@@ -256,14 +259,21 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
             else
                 d_narodenia = null;
             poistovna = hlpInStream.readInt();
-            hospitalizacieLength = hlpInStream.readInt();
+            int realHosp = hlpInStream.readInt();
             //added hospitalization
             hospitalizacie.clear();
-            for (int i = 0; i < hospitalizacieLength; i ++) {
+            idHospitalizacie.clear();
+            for (int i = 0; i < maxLengtHospitalizacie; i ++) {
                 byte [] hosp = hlpByteArrayInputStream.readNBytes((new Hospitalizacia(0, null, null, null)).getSize());
                 Hospitalizacia h = new Hospitalizacia(0, null, null, null);
                 h.FromByteArray(hosp);
                 hospitalizacie.add(h);
+                if (h.getId() != -99) {
+                    idHospitalizacie.add(h.getId());
+                }
+            }
+            if (realHosp != idHospitalizacie.size()) {
+                System.out.println("Error: Hospitalizacie neboli nacitane spravne");
             }
 
         } catch (IOException e){

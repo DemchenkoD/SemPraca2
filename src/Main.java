@@ -15,6 +15,7 @@ public class Main {
 
 
         Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), "sadas");
+        pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Diagnoza");
         Hashing<Pacient> hashing = new Hashing<>("random.txt", 2, 5, pacient);
         hashing.Insert(pacient);
         Pacient p = hashing.Find(new Pacient("", "", "0712200196", null, ""));
