@@ -24,6 +24,19 @@ public class Block<T extends IData> implements IRecord {
         ValidCount = 0;
     }
     public boolean insertRecord(T paNew) {
+        int indexExists = -99;
+        for (int i = 0; i < records.size(); i++){
+            if (records.get(i).myEquals(paNew)) {
+                indexExists = i;
+                break;
+            }
+
+        }
+        if (indexExists != -99) {
+            records.remove(indexExists);
+            records.add(indexExists, paNew);
+            return true;
+        }
         if (ValidCount < blockFactor) {
             records.remove(ValidCount);
             records.add(ValidCount, paNew);

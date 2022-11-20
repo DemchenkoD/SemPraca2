@@ -21,18 +21,17 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
     private LocalDate d_narodenia;
 
     private int poistovna;
-    private String zdr_poistovna;
     private ArrayList<Hospitalizacia> hospitalizacie;
     private ArrayList<Integer> idHospitalizacie;
     public Pacient() {
 
     }
-    public Pacient(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, String pZdr_poistovna) {
+    public Pacient(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, int pZdr_poistovna) {
         meno = pMeno;
         priezvisko = pPriezvisko;
         rod_cislo = pRod_cislo;
         d_narodenia = pD_narodenia;
-        zdr_poistovna = pZdr_poistovna;
+        poistovna = pZdr_poistovna;
         hospitalizacie = new ArrayList<Hospitalizacia>(maxLengtHospitalizacie);
         for (int i = 0; i < maxLengtHospitalizacie; i++)
             hospitalizacie.add(new Hospitalizacia());
@@ -41,7 +40,6 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         menoLength = meno.length();
         priezviskoLength = priezvisko.length();
 
-        poistovna = 234;
         //this.FromByteArray(this.ToByteArray());
     }
     public String getMeno() {
@@ -60,10 +58,6 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         return d_narodenia;
     }
 
-    public String getZdr_poistovna() {
-        return zdr_poistovna;
-    }
-
     public void setMeno(String meno) {
         this.meno = meno;
     }
@@ -80,9 +74,6 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         this.d_narodenia = d_narodenia;
     }
 
-    public void setZdr_poistovna(String zdr_poistovna) {
-        this.zdr_poistovna = zdr_poistovna;
-    }
     public boolean addHospitalizacia(LocalDateTime pD_zaciatku, LocalDateTime pD_konca, String pDiagnoza ) {
         int id;
         Random r = new Random();
@@ -102,28 +93,33 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         hospitalizacie.add(h);
         return true;
     }
-/*
-    public Hospitalizacia getHospitalizacia(String pNazovNemocnice) {
-        for (Hospitalizacia tmp : hospitalizacie){
-            if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo))
-                return tmp;
-        }
-        return null;
-    }
-    public LocalDateTime ukoncitHospitalizaciu(String pNazovNemocnice, LocalDateTime pKonca) { // return zaciatok hospitalizacie
 
-        for (Hospitalizacia tmp : hospitalizacie){
-            if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo) && tmp.getD_konca() == null) {
-                tmp.setD_konca(pKonca);
-                return tmp.getD_zaciatku();
+    public ArrayList<Hospitalizacia> getHospitalizacie() {
+        return hospitalizacie;
+    }
+
+    /*
+        public Hospitalizacia getHospitalizacia(String pNazovNemocnice) {
+            for (Hospitalizacia tmp : hospitalizacie){
+                if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo))
+                    return tmp;
             }
+            return null;
         }
-        return null;
-    }
+        public LocalDateTime ukoncitHospitalizaciu(String pNazovNemocnice, LocalDateTime pKonca) { // return zaciatok hospitalizacie
 
- */
+            for (Hospitalizacia tmp : hospitalizacie){
+                if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo) && tmp.getD_konca() == null) {
+                    tmp.setD_konca(pKonca);
+                    return tmp.getD_zaciatku();
+                }
+            }
+            return null;
+        }
+
+     */
     public String toString() {
-        return (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + zdr_poistovna);
+        return (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna);
     }
     /*
     public String toFile() {
@@ -177,12 +173,15 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
 
     @Override
     public boolean myEquals(Pacient data) {
-        return Long.parseLong(this.rod_cislo) == Long.parseLong(data.rod_cislo);
+        if (!this.rod_cislo.equals("") && !data.rod_cislo.equals(""))
+            return Long.parseLong(this.rod_cislo) == Long.parseLong(data.rod_cislo);
+        else
+            return this.rod_cislo.equals(data.rod_cislo);
     }
 
     @Override
     public Pacient createClass() {
-        return new Pacient("","","",null,"");
+        return new Pacient("","","",null,-1);
     }
 
     @Override
@@ -236,6 +235,8 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
             for (int i= 0; i < maxLengtRodCislo; i++) {
                 rod_cislo += hlpInStream.readChar();
             }
+            if (rod_cislo.equals("----------"))
+                rod_cislo = "";
             menoLength = hlpInStream.readInt();
             meno = "";
             for (int j = 0; j < maxLengthMeno; j++) {
@@ -279,6 +280,34 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
         } catch (IOException e){
             throw new IllegalStateException("Error during conversion from byte array.");
         }
+
+    }
+
+    public boolean fullyCompare(Pacient p) {
+        boolean ok = true;
+        if (!this.meno.equals(p.meno))
+            ok = false;
+        else if(!this.priezvisko.equals(p.priezvisko))
+            ok = false;
+        else if(!this.rod_cislo.equals(p.rod_cislo))
+            ok = false;
+        else if(this.poistovna != p.poistovna)
+            ok = false;
+        else if(this.d_narodenia.compareTo(p.d_narodenia) != 0)
+            ok = false;
+        else {
+            ArrayList<Hospitalizacia> hospitalizacie2 = p.getHospitalizacie();
+            for (int i = 0; i < hospitalizacie.size(); i++) {
+                if (!hospitalizacie.get(i).fullyCompare(hospitalizacie2.get(i))) {
+                    ok = false;
+                    System.out.println("Hospitalizations not equals");
+                    break;
+                }
+
+            }
+        }
+        return ok;
+
 
     }
 

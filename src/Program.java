@@ -60,10 +60,10 @@ public class Program {
     }
     public ArrayList<String> task6(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, String pZdr_poistovna) {
         ArrayList<String> logs = new ArrayList<String>();
-        if (pacienti.insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
-            logs.add("Pacient bol uspesne pridany");
-        else
-            logs.add("Chyba");
+        //if (pacienti.insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
+        //    logs.add("Pacient bol uspesne pridany");
+        //else
+        //    logs.add("Chyba");
         return logs;
     }
     public ArrayList<String> task7( String pNazovNemocnice, LocalDateTime pMesiac) {

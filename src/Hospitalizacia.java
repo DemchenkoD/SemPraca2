@@ -177,6 +177,18 @@ public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospita
             throw new IllegalStateException("Error during conversion from byte array.");
         }
     }
+    public boolean fullyCompare(Hospitalizacia h) {
+        boolean ok = true;
+        if(this.id != h.id)
+            ok = false;
+        else if (!this.diagnoza.equals(h.diagnoza))
+            ok = false;
+        else if (d_zaciatku.format(formatter).compareTo(h.d_zaciatku.format(formatter)) != 0)
+            ok = false;
+        else if (d_konca.format(formatter).compareTo(h.d_konca.format(formatter)) != 0)
+            ok = false;
+        return ok;
+    }
 
     @Override
     public int getSize() {

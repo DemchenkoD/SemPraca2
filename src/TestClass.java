@@ -1,5 +1,9 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TestClass {
     ArrayList<Integer> insertedIndexes;
@@ -210,6 +214,34 @@ public class TestClass {
 
         System.out.println(sum/ resultMain.size());
     }
+    public void testFile(Hashing<Pacient> file, int pacientCount) {
+        Generator g = new Generator();
+        g.generatePacient(pacientCount);
+        ArrayList<Pacient> pacienti = g.getPacienti();
+        for (Pacient p: pacienti) {
+            for(int i = 0; i < 10; i++){
+                LocalDateTime from = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
+                from = from.plusSeconds(ThreadLocalRandom.current().nextLong(10000));
+                LocalDateTime to = LocalDateTime.of(2020, 1, 1, 1, 1, 1);
+                long days = from.until(to, ChronoUnit.DAYS);
+                long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
+                LocalDateTime datumZaciatku = from.plusDays(randomDays);
+                long daysHospitalized = ThreadLocalRandom.current().nextLong(150 + 1);
+                LocalDateTime datumKoniec = datumZaciatku.plusDays(daysHospitalized);
 
+                String diagnoza = g.genString(10);
+                p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
+                file.Insert(p);
+            }
+        }
+        for (Pacient p: pacienti) {
+            Pacient found_pacient = file.Find(p);
+            if (!p.fullyCompare(found_pacient)) {
+                System.out.println("Patients not equals");
+                return;
+            }
+        }
+        System.out.println("Test passed");
 
+    }
 }

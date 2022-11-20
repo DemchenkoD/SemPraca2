@@ -34,6 +34,14 @@ public class Hashing<T extends IData> {
 
     }
 
+    public int getBlockFactor() {
+        return blockFactor;
+    }
+
+    public int getNumbOfBlocks() {
+        return numbOfBlocks;
+    }
+
     public T Find(T data) {
         Block<T> b;
         BitSet hash = data.getHash();

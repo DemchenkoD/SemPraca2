@@ -4,15 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class GUI extends JFrame{
-    private JPanel mainPanel,panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel_gen;
-    private JButton b1, b2, b3, b4, b5, b6, b7, b_gen;
+    private JPanel file_panel, mainPanel,panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel_gen;
+    private JButton b_stat_file, b_dyn_file, b1, b2, b3, b4, b5, b6, b7, b_gen;
     private JButton b1_confirm, b2_confirm, b3_confirm, b4_confirm,b5_confirm, b6_confirm,b7_confirm, b_gen_confirm;
     private JButton b_main;
     private Program mp = new Program();
@@ -38,12 +36,14 @@ public class GUI extends JFrame{
     private JTextField pacienti_output;
     private JTextField nemocnice_input;
     private JTextField nemocnice_output;
+    boolean staticFile = false;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public GUI() {
-        createPanel();
-        addPanel();
+        //createMainPanel();
+        //addMainPanel();
+        createStartPanel();
         this.setTitle("Aplikacia");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1500,1000);
@@ -339,8 +339,25 @@ public class GUI extends JFrame{
         panel_gen.add(b_main);
         panel_gen.add(b_gen_confirm);
     }
+    private void createStartPanel() {
 
-    private void createPanel() {
+        file_panel = new JPanel();
+        file_panel.setLayout(null);
+
+        b_stat_file = new JButton("Static file");
+        b_stat_file.addActionListener(new addButtonListener());
+        b_stat_file.setBounds(20, 100, 400, 40);
+        file_panel.add(b_stat_file);
+
+        b_dyn_file = new JButton("Dynamic file");
+        b_dyn_file.addActionListener(new addButtonListener());
+        b_dyn_file.setBounds(20, 200, 400, 40);
+        file_panel.add(b_dyn_file);
+
+        add(file_panel);
+
+    }
+    private void createMainPanel() {
 
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
@@ -418,7 +435,7 @@ public class GUI extends JFrame{
         b_gen_confirm.setBounds(200, 400, 120, 30);
     }
 
-    private void addPanel() {
+    private void addMainPanel() {
         mainPanel.add(b1);
         mainPanel.add(b2);
         mainPanel.add(b3);
@@ -443,6 +460,18 @@ public class GUI extends JFrame{
             String str_logs = "";
             getContentPane().removeAll();
             switch (ae.getActionCommand()) {
+                case "Static file":
+                    staticFile = true;
+                    createMainPanel();
+                    addMainPanel();
+
+                    break;
+                case "Dynamic file":
+                    staticFile = false;
+                    createMainPanel();
+                    addMainPanel();
+                    break;
+
                 case "#1 Vyhladanie zaznamov pacienta":
                     createPanel1();
                     getContentPane().add(panel1);

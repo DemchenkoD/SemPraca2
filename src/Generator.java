@@ -80,8 +80,8 @@ public class Generator {
             long days = from.until(to, ChronoUnit.DAYS);
             long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
             LocalDate d_narodenia = from.plusDays(randomDays);
-
-            String zdr_poistovna = genString(10);
+            Random r = new Random();
+            int zdr_poistovna = r.nextInt();
             pacienti.add(new Pacient(meno, priezvisko, rod_cislo, d_narodenia, zdr_poistovna));
         }
     }
@@ -92,7 +92,7 @@ public class Generator {
         }
     }
     */
-    private String genString(int length) {
+    public String genString(int length) {
 
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvxyz";
         StringBuilder sb = new StringBuilder(length);
@@ -104,7 +104,7 @@ public class Generator {
         return sb.toString();
 
     }
-    private String genRodCislo() {
+    public String genRodCislo() {
 
         String numbers = "0123456789";
         StringBuilder sb = new StringBuilder(10);
