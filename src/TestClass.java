@@ -244,9 +244,15 @@ public class TestClass {
             pacienti.remove(p);
 
         for (Pacient p: pacienti) {
-            Pacient found_pacient = file.Find(p);
-            if (!p.fullyCompare(found_pacient)) {
-                System.out.println("Patients not equals");
+            Pacient found_patient = file.Find(p);
+            if (!p.fullyCompare(found_patient)) {
+                System.out.println("Patient not equals");
+                return;
+            }
+            file.Delete(p);
+            found_patient = file.Find(p);
+            if (found_patient != null) {
+                System.out.println("Patient exists");
                 return;
             }
         }

@@ -17,9 +17,9 @@ public class Main {
         Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), 99);
         //pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Diagnoza");
         ///*
-        Hashing<Pacient> hashing = new Hashing<>("random2.txt", 3, 20, pacient);
+        Hashing<Pacient> hashing = new Hashing<>("random2.txt", 10, 10000, pacient);
         TestClass test = new TestClass();
-        test.testFile(hashing, 12);
+        test.testFile(hashing, 5000 );
 
          //*/
         //hashing.Insert(pacient);

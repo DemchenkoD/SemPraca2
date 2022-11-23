@@ -31,6 +31,10 @@ public class Hashing<T extends IData> {
 
     }
 
+    public Hashing() {
+
+    }
+
     public int getBlockFactor() {
         return blockFactor;
     }
