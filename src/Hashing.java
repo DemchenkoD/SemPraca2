@@ -13,11 +13,8 @@ public class Hashing<T extends IData> {
         this.blockFactor = paBlockFactor;
         numbOfBlocks = (int) Math.ceil((double) countData / (double) paBlockFactor);
 
-
         Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
         byte[] blockBytes = new byte[b.getSize()];
-
-
 
         try {
             this.file = new RandomAccessFile(paFileName, "rw");
@@ -48,7 +45,7 @@ public class Hashing<T extends IData> {
 
 
         b = new Block<>(blockFactor, data.getClass());
-        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize(); // ????????
+        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize();
         byte[] blockBytes = new byte[b.getSize()];
         try {
 
@@ -58,8 +55,6 @@ public class Hashing<T extends IData> {
         } catch (IOException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        //b.FromByteArray(blockBytes);
 
         //+Kontrola ValidCount
         for (T zaznam : b.getRecords()) {
@@ -76,34 +71,23 @@ public class Hashing<T extends IData> {
         BitSet hash = data.getHash();
 
         b = new Block<>(blockFactor, data.getClass());
-        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize(); // ????????
+        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize();
         byte[] blockBytes = new byte[b.getSize()];
         try {
 
             file.seek(adresaBloku) ;
             file.read(blockBytes);
             b.FromByteArray(blockBytes);
-            b.insertRecord(data);
-            file.seek(adresaBloku);
-            file.write(b.ToByteArray());
+            if (b.insertRecord(data)) {
+                file.seek(adresaBloku);
+                file.write(b.ToByteArray());
+                return true;
+            }
         } catch (IOException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
-
-
-        // file. seek (adresaBloku) ;
-        // file.read(blok);
-        // TODO Add find block method and check if block with such hash exists
-
-        //Block<T> b;
-        //b = new Block<>(blockFactor, data.getClass());
-        //b.insertRecord(data);
-
-        //TODO add write to file whole block
-
-        return true;
+        return false;
     }
 
 
@@ -114,7 +98,7 @@ public class Hashing<T extends IData> {
         BitSet hash = data.getHash();
         boolean result = false;
         b = new Block<>(blockFactor, data.getClass());
-        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize(); // ????????
+        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize();
         byte[] blockBytes = new byte[b.getSize()];
         try {
 

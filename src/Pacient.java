@@ -285,29 +285,37 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
 
     public boolean fullyCompare(Pacient p) {
         boolean ok = true;
-        if (!this.meno.equals(p.meno))
-            ok = false;
-        else if(!this.priezvisko.equals(p.priezvisko))
-            ok = false;
-        else if(!this.rod_cislo.equals(p.rod_cislo))
-            ok = false;
-        else if(this.poistovna != p.poistovna)
-            ok = false;
-        else if(this.d_narodenia.compareTo(p.d_narodenia) != 0)
-            ok = false;
-        else {
-            ArrayList<Hospitalizacia> hospitalizacie2 = p.getHospitalizacie();
-            for (int i = 0; i < hospitalizacie.size(); i++) {
-                if (!hospitalizacie.get(i).fullyCompare(hospitalizacie2.get(i))) {
-                    ok = false;
-                    System.out.println("Hospitalizations not equals");
-                    break;
+        if(p == null)
+            System.out.println("NULL");
+
+
+        try {
+            if (!this.meno.equals(p.meno))
+                ok = false;
+            else if (!this.priezvisko.equals(p.priezvisko))
+                ok = false;
+            else if (!this.rod_cislo.equals(p.rod_cislo))
+                ok = false;
+            else if (this.poistovna != p.poistovna)
+                ok = false;
+            else if (this.d_narodenia.compareTo(p.d_narodenia) != 0)
+                ok = false;
+            else {
+                ArrayList<Hospitalizacia> hospitalizacie2 = p.getHospitalizacie();
+                for (int i = 0; i < hospitalizacie.size(); i++) {
+                    if (!hospitalizacie.get(i).fullyCompare(hospitalizacie2.get(i))) {
+                        ok = false;
+                        System.out.println("Hospitalizations not equals");
+                        break;
+                    }
+
                 }
-
             }
+            return ok;
+        } catch (NullPointerException n ) {
+            System.out.println("Error");
+            return ok;
         }
-        return ok;
-
 
     }
 

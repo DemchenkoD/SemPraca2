@@ -218,6 +218,7 @@ public class TestClass {
         Generator g = new Generator();
         g.generatePacient(pacientCount);
         ArrayList<Pacient> pacienti = g.getPacienti();
+        ArrayList<Pacient> removePacients = new ArrayList<>();
         for (Pacient p: pacienti) {
             for(int i = 0; i < 10; i++){
                 LocalDateTime from = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
@@ -231,9 +232,17 @@ public class TestClass {
 
                 String diagnoza = g.genString(10);
                 p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
-                file.Insert(p);
+                boolean insert_passed  = file.Insert(p);
+                if(!insert_passed) {
+                    System.out.println("Insert didn't pass for patient" + p.toString());
+                    removePacients.add(p);
+                    break;
+                }
             }
         }
+        for (Pacient p: removePacients)
+            pacienti.remove(p);
+
         for (Pacient p: pacienti) {
             Pacient found_pacient = file.Find(p);
             if (!p.fullyCompare(found_pacient)) {
