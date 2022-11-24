@@ -45,6 +45,9 @@ public class Block<T extends IData> implements IRecord {
         }
         return false;
     }
+    public boolean isFull(){
+        return ValidCount == blockFactor;
+    }
 
     public boolean deleteRecord(T paNew) {
         for (int i = 0; i < records.size(); i++) {

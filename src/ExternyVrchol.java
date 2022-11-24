@@ -14,6 +14,10 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
         return adresaBloku;
     }
 
+    public void setAdresaBloku(long adresaBloku) {
+        this.adresaBloku = adresaBloku;
+    }
+
     @Override
     public boolean isInternal() {
         return false;

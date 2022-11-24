@@ -1,5 +1,7 @@
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -11,29 +13,21 @@ public class Main {
 
         //GUI gui = new GUI();
 
-        //propertyHashing = new Hashing<Pacient>("file.dat", 13);
-
-
         Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), 99);
-        //pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Diagnoza");
-        ///*
-        Hashing<Pacient> hashing = new Hashing<>("random2.txt", 10, 10000, pacient);
-        TestClass test = new TestClass();
-        test.testFile(hashing, 5000 );
 
-         //*/
-        //hashing.Insert(pacient);
-        //Pacient p = hashing.Find(new Pacient("", "", "0712200196", null, 0));
-        //hashing.Delete(new Pacient("", "", "0712200196", null, 0));
-        //System.out.println("Hello");
-        /*
-        Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), "sadas");
-        pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "diagnoza");
-        pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "diagnoza2");
-        pacient.addHospitalizacia(LocalDateTime.now(), LocalDateTime.now().plusDays(1), "diagnoza3");
-        pacient.FromByteArray(pacient.ToByteArray());
-        //propertyHashing.Insert (hlpProperty) ;
+        //Hashing<Pacient> hashing = new Hashing<>("random2.txt", 10, 10000, pacient);
+        File myObj = new File("newFile.txt"); //TODO remove
+        myObj.delete();
+        Generator g = new Generator();
+        ArrayList<Pacient> pacienti = g.genPatientsForFile(10);
+        DynamicHashing<Pacient> hashing2 = new DynamicHashing<>("newFile.txt", "treeFile", "FreeBlocks", 2, pacient);
+        hashing2.Insert2(pacient);
+        for (Pacient p: pacienti)
+            hashing2.Insert2(p);
+        hashing2.Find2(new Pacient("", "", "0712200196", LocalDate.now(), 99));
+        //TestClass test = new TestClass();
+        //test.testFile(hashing, 5000 );
 
-*/
+
     }
 }

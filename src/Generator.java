@@ -130,4 +130,26 @@ public class Generator {
         return (gc.get(gc.DAY_OF_MONTH) + "." + (gc.get(gc.MONTH) + 1) + "." + gc.get(gc.YEAR));
 
     }
+    public ArrayList<Pacient> genPatientsForFile(int num) {
+        generatePacient(num);
+        ArrayList<Pacient> pacienti = getPacienti();
+        for (Pacient p: pacienti) {
+            for(int i = 0; i < 10; i++){
+                LocalDateTime from = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
+                from = from.plusSeconds(ThreadLocalRandom.current().nextLong(10000));
+                LocalDateTime to = LocalDateTime.of(2020, 1, 1, 1, 1, 1);
+                long days = from.until(to, ChronoUnit.DAYS);
+                long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
+                LocalDateTime datumZaciatku = from.plusDays(randomDays);
+                long daysHospitalized = ThreadLocalRandom.current().nextLong(150 + 1);
+                LocalDateTime datumKoniec = datumZaciatku.plusDays(daysHospitalized);
+
+                String diagnoza = genString(10);
+                p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
+
+            }
+        }
+        return pacienti;
+
+    }
 }

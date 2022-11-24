@@ -2,42 +2,62 @@ import java.util.BitSet;
 
 public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
 
-    private InternyVrchol lavy = null;
-    private InternyVrchol pravy = null;
+    private IVrchol lavy = null;
+    private IVrchol pravy = null;
     private InternyVrchol parent;
-    private BitSet key;
+    //private BitSet key;
     int indexSplitter;
-    public InternyVrchol(InternyVrchol paParent, BitSet paKey, int paIndexSplitter) {
+    public InternyVrchol(InternyVrchol paParent, int paIndexSplitter) {
         this.indexSplitter = paIndexSplitter;
-        this.key = paKey;
+        //this.key = paKey;
         this.parent = paParent;
     }
 
-    public void setLavy(InternyVrchol lavy) {
+    public int getIndexSplitter() {
+        return indexSplitter;
+    }
+
+    public void setLavy(IVrchol lavy) {
         this.lavy = lavy;
     }
 
-    public void setPravy(InternyVrchol pravy) {
+    public void setPravy(IVrchol pravy) {
         this.pravy = pravy;
     }
-    public InternyVrchol getLavy() {
+    public IVrchol getLavy() {
         return lavy;
     }
 
-    public InternyVrchol getPravy() {
+    public IVrchol getPravy() {
         return pravy;
     }
 
+    public IVrchol getSon(BitSet b) {
+        int val = b.get(indexSplitter)? 1 : 0;
+        if ( val == 1)
+            return pravy;
+        else if ( val == 0 )
+            return lavy;
+        else
+            return null;
+    }
+    public void setSon(IVrchol son, IVrchol replacement) {
+        if (pravy == son)
+            pravy = replacement;
+        else if (lavy == son)
+            lavy = replacement;
+    }
+
     @Override
-    public int compareTo(InternyVrchol o) {
-        int myInt = this.key.get(indexSplitter) ? 1 : 0;
+    public int compareTo(InternyVrchol o) { //TODO Remove
+        /*int myInt = this.key.get(indexSplitter) ? 1 : 0;
         int oInt = o.key.get(indexSplitter)? 1 : 0;
         if ( myInt > oInt)
             return 1;
         else if (myInt < oInt)
             return -1;
         else
-            return 0;
+        */    return 0;
 
     }
 
