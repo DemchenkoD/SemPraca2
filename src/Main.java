@@ -24,7 +24,8 @@ public class Main {
         hashing2.Insert2(pacient);
         for (Pacient p: pacienti)
             hashing2.Insert2(p);
-        hashing2.Find2(new Pacient("", "", "0712200196", LocalDate.now(), 99));
+        hashing2.vypis();
+        //hashing2.Find2(new Pacient("", "", "0712200196", LocalDate.now(), 99));
         //TestClass test = new TestClass();
         //test.testFile(hashing, 5000 );
 

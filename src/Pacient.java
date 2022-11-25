@@ -185,6 +185,14 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
     }
 
     @Override
+    public void print() {
+        System.out.println("P\t" +  meno + '\t' + priezvisko + '\t' + rod_cislo + '\t'+ d_narodenia.toString() + '\t' + poistovna + '\n');
+        for (int i = 0; i < idHospitalizacie.size(); i ++) {
+            hospitalizacie.get(i).print();
+        }
+    }
+
+    @Override
     public byte[] ToByteArray() {
 
         ByteArrayOutputStream hlpByteArrayOutputStream = new ByteArrayOutputStream();

@@ -45,6 +45,19 @@ public class Block<T extends IData> implements IRecord {
         }
         return false;
     }
+    public void vypis() {
+        System.out.println("________________________NEW BLOCK_______________SIZE =" + ValidCount);
+        if(ValidCount == 0) {
+            System.out.println("Empty block on address ");
+        } else {
+
+            for(int i = 0; i < ValidCount; i++){
+                records.get(i).print();
+            }
+        }
+    }
+
+
     public boolean isFull(){
         return ValidCount == blockFactor;
     }

@@ -1,3 +1,4 @@
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -14,14 +15,17 @@ public class DynamicHashing<T extends IData> extends Hashing {
     int blockFactor;
     private IVrchol Root;
     private RandomAccessFile file;
+
+    private ArrayList<Long> freeAdresses ;
     private T dataInitial;
-    public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, int paBlockFactor, T dataInitial) {
+    public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, int paBlockFactor, T paDataInitial) {
         super();
         this.fileName = paFileName;
         blockFactor = paBlockFactor;
         this.treeFileName = paTreeFileName; //TODO add read strom from file
         this.freeBlocksFileName = paFreeBlocksFileName;
-        dataInitial = dataInitial;
+        freeAdresses = new ArrayList<>();
+        dataInitial = paDataInitial;
         //strom = new Strom();
         Root = new ExternyVrchol(null, -1);
         //Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
@@ -37,6 +41,29 @@ public class DynamicHashing<T extends IData> extends Hashing {
         //startVrchol.setAdresaBloku(0);
 
         //strom.insert(startVrchol);
+    }
+    public void vypis() {
+        Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
+        byte[] blockBytes = new byte[b.getSize()];
+        long counter = 0;
+        while(true){
+            try{
+                long address = counter * b.getSize();
+                if (address >= file.length())
+                    break;
+                file.seek(address);
+                file.read(blockBytes);
+                b.FromByteArray(blockBytes);
+                b.vypis();
+                counter++;
+
+            } catch(EOFException e){
+                System.out.println("EOF");
+                break;
+            } catch (IOException e) {
+                System.out.println("Error");
+            }
+        }
     }
 
     public boolean Insert2(T data) {
@@ -64,6 +91,8 @@ public class DynamicHashing<T extends IData> extends Hashing {
                     return false;
             } else { //the block is full
                 ArrayList<T> allData = b.getRecords();
+                freeAdresses.add(extVrchol.getAdresaBloku());
+                extVrchol.setAdresaBloku(-1);
                 allData.add(data);
                 return transformAndInsert(extVrchol, allData);
             }
@@ -123,6 +152,11 @@ public class DynamicHashing<T extends IData> extends Hashing {
     }
 
     private long getFreeAdresa() {
+        if (freeAdresses.size() != 0) {
+            long address = freeAdresses.get(0);
+            freeAdresses.remove(0);
+            return address;
+        }
         try {
             return file.length();
         } catch (IOException e){

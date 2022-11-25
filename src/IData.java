@@ -5,6 +5,8 @@ public interface IData<T> extends IRecord<T> {
     public boolean myEquals(T data);
 
     public T createClass();
+
+    public void print();
 }
 
 

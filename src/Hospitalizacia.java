@@ -114,6 +114,14 @@ public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospita
     }
 
     @Override
+    public void print() {
+        if (d_konca != null)
+            System.out.println("H\t" + d_zaciatku.format(formatter) + '\t' + d_konca.format(formatter) + '\t' + diagnoza +'\n');
+        else
+            System.out.println("H\t" + d_zaciatku.format(formatter) + '\t' + "null" + '\t' + diagnoza +'\n');
+    }
+
+    @Override
     public byte[] ToByteArray() {
         ByteArrayOutputStream hlpByteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream hlpOutStream = new DataOutputStream(hlpByteArrayOutputStream);
