@@ -18,22 +18,41 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
         return adresaBloku;
     }
 
-    public BitSet getKey() {
-        BitSet key;
+    public String getKey() {
+        //BitSet key;
+        String result = null;
+        char[] bits = new char [parent.getIndexSplitter() + 1];
         if (parent != null) {
-            key = new BitSet(parent.getIndexSplitter() + 1);
+            //key = new BitSet(parent.getIndexSplitter() + 1);
             InternyVrchol tmp_parent = parent;
             IVrchol tmp_son = this;
             for (int i = 0 ; i < parent.getIndexSplitter() + 1; i++) {
-                key.set(key.size()-i, tmp_parent.isItRightSon(tmp_son));
+                if(tmp_parent.isItRightSon(tmp_son))
+                    bits[parent.getIndexSplitter() -i] = '1';
+                else
+                    bits[parent.getIndexSplitter() -i] = '0';
+                //key.set(parent.getIndexSplitter()-i, tmp_parent.isItRightSon(tmp_son));
                 tmp_parent = tmp_parent.getParent();
                 tmp_son = tmp_son.getParent();
             }
+            result = String.valueOf(bits);
 
         } else {
-            key = null;
+            //key = null;
         }
-        return key;
+        return result;//key;
+    }
+    public void print() {
+        /*BitSet key = getKey();
+        StringBuilder s = new StringBuilder();
+        for( int i = 0; i < key.length();  i++ )
+        {
+            s.append( key.get( i ) == true ? 1: 0 );
+        }*/
+        System.out.println("Key " + getKey() + "\tAdresa " + adresaBloku);
+    }
+    public String toString() {
+        return getKey() + ";" + adresaBloku +'\n';
     }
     public void setAdresaBloku(long adresaBloku) {
         this.adresaBloku = adresaBloku;
@@ -48,4 +67,5 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
     public int compareTo(ExternyVrchol o) {
         return 0;
     }
+
 }

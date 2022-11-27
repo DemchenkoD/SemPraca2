@@ -1,8 +1,7 @@
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -155,7 +154,7 @@ public class DynamicHashing<T extends IData> extends Hashing {
                     }
 
                     extVrchol = uniteSons(extVrchol.getParent());
-                    b = getBlock(extVrchol) ;
+                    b = getBlock(extVrchol);
                     adresaBloku = extVrchol.getAdresaBloku();
 
 
@@ -180,6 +179,7 @@ public class DynamicHashing<T extends IData> extends Hashing {
             return false;
         }
     }
+
     public boolean Delete3(T data) {
         BitSet hash = data.getHash();
         Block<T> b = new Block<>(blockFactor, data.getClass());
@@ -209,7 +209,7 @@ public class DynamicHashing<T extends IData> extends Hashing {
                     adresaBloku = newVrchol.getAdresaBloku();
                      */
                     extVrchol = uniteSons(extVrchol.getParent());
-                    b = getBlock(extVrchol) ;
+                    b = getBlock(extVrchol);
                     adresaBloku = extVrchol.getAdresaBloku();
 
 
@@ -387,55 +387,8 @@ public class DynamicHashing<T extends IData> extends Hashing {
             Insert2(data);
         return true;
     }
-    public ArrayList<ExternyVrchol> getExterneVrcholi() throws IOException { //todo remove exception
-        //clearVisited();
-        long size = file.length();
-        ArrayList<ExternyVrchol> result = new ArrayList<>();
-        if (Root == null || Root instanceof ExternyVrchol)
-            return result;
-        InternyVrchol node = (InternyVrchol) Root;
-        boolean value_visited = !node.visited;
-        while (true) {
 
-            if (!node.visited) {
-
-                while (node.getLavy() instanceof InternyVrchol) {
-                    if (((InternyVrchol) node.getLavy()).visited)
-                        break;
-                    node = (InternyVrchol) node.getLavy();
-                }
-                if (node.getLavy() instanceof ExternyVrchol)
-                    result.add((ExternyVrchol) node.getLavy());
-                if (node.getPravy() instanceof ExternyVrchol)
-                    result.add((ExternyVrchol) node.getPravy());
-                node.visited = true;
-
-            }
-            boolean goHigher = false;
-            if (node.getPravy() instanceof InternyVrchol) {
-                if (!((InternyVrchol) node.getPravy()).visited)
-                    node = (InternyVrchol) node.getPravy();
-                else
-                    goHigher = true;
-            } else {
-                goHigher = true;
-            }
-            if (goHigher) {
-                try {
-                    while (node.getParent().visited)
-                        node = node.getParent();
-                    node = node.getParent();
-                } catch (NullPointerException e) {
-                    return result;
-                }
-            }
-        }
-
-    }
-
-    public ArrayList<ExternyVrchol> getExterneVrcholi2() throws IOException { //todo remove exception
-        //clearVisited();
-        long size = file.length();
+    public ArrayList<ExternyVrchol> getExterneVrcholi() {
         ArrayList<ExternyVrchol> result = new ArrayList<>();
         if (Root == null || Root instanceof ExternyVrchol)
             return result;
@@ -479,7 +432,77 @@ public class DynamicHashing<T extends IData> extends Hashing {
 
     }
 
+    public void writeTreeToFile(String nazovSuboru) {// TODO check if tree has only one extVrchol
+        try {
+            FileWriter writer = new FileWriter(nazovSuboru);
+            ArrayList<ExternyVrchol> extVrcholy = getExterneVrcholi();
+            for(ExternyVrchol extVrchol: extVrcholy)
+                writer.write(extVrchol.toString());
 
+            writer.close();
+        } catch (IOException e) {
+
+        }
+    }
+    public void readTreeFromFile(String nazovSuboru) {
+        Root = null;
+        try {
+            File file = new File(nazovSuboru);
+            Scanner reader = new Scanner(file);
+            while (reader.hasNextLine()) {
+                String data = reader.nextLine();
+                String parts[] = data.split(";");
+                IVrchol tmp = Root;
+
+                for(int i = 0; i < parts[0].length(); i++){ //create IntVrchol for every bit in adress
+                    if (i == 0 && !(Root instanceof InternyVrchol)) { //Root has to be created
+                        Root = new InternyVrchol(null, 0);
+                        tmp = Root;
+                        ((InternyVrchol)tmp).setLavy(new ExternyVrchol((InternyVrchol)tmp, -1));
+                        ((InternyVrchol)tmp).setPravy(new ExternyVrchol((InternyVrchol)tmp, -1));
+                    }
+                    if (tmp instanceof ExternyVrchol) {
+                        transformAndInsert((ExternyVrchol) tmp, new ArrayList<>()); //TODO change
+                        tmp = tmp.getParent();
+                        i = i-2;
+                        continue;
+                    }
+                    //tmp = new InternyVrchol(tmp.getParent(), tmp.getParent().getIndexSplitter() + 1);
+                    if (parts[0].charAt(i) == '0')
+                        tmp = ((InternyVrchol) tmp).getLavy();
+                    else if (parts[0].charAt(i) == '1')
+                        tmp = ((InternyVrchol) tmp).getPravy();
+
+                }
+                ExternyVrchol extVrchol = new ExternyVrchol(tmp.getParent(), Long.parseLong(parts[1]));
+                tmp.getParent().setSon(tmp, extVrchol);
+
+            }
+            reader.close();
+        } catch (IOException e) {
+
+        }
+    }
+    private ExternyVrchol createExtVrcholOnPosition(String adresa) {
+        if (adresa.contains("")) {
+            Root = new ExternyVrchol(null, -1);
+            return (ExternyVrchol) Root;
+        }
+        IVrchol tmp = Root;
+        for (int i = 0; i < adresa.length(); i++) {
+
+            if(!(tmp instanceof InternyVrchol)) {
+                tmp = new InternyVrchol(tmp.getParent(), tmp.getParent().getIndexSplitter()+1);
+            }
+
+            if (adresa.charAt(i) == '0') {
+
+            } else if (adresa.charAt(i) == '1') {
+
+            }
+        }
+        return null;
+    }
 
     private long getFreeAdresa() {
         if (freeAdresses.size() != 0) {
