@@ -5,6 +5,7 @@ public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
     private IVrchol lavy = null;
     private IVrchol pravy = null;
     private InternyVrchol parent;
+    public boolean visited;
     //private BitSet key;
     int indexSplitter;
     public InternyVrchol(InternyVrchol paParent, int paIndexSplitter) {
@@ -59,7 +60,12 @@ public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
         else
             return null;
     }
+    public boolean isItRightSon(IVrchol son) {
+        if (pravy == son)
+            return true;
 
+        return false;
+    }
 
     @Override
     public int compareTo(InternyVrchol o) { //TODO Remove

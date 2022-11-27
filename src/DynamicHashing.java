@@ -387,6 +387,99 @@ public class DynamicHashing<T extends IData> extends Hashing {
             Insert2(data);
         return true;
     }
+    public ArrayList<ExternyVrchol> getExterneVrcholi() throws IOException { //todo remove exception
+        //clearVisited();
+        long size = file.length();
+        ArrayList<ExternyVrchol> result = new ArrayList<>();
+        if (Root == null || Root instanceof ExternyVrchol)
+            return result;
+        InternyVrchol node = (InternyVrchol) Root;
+        boolean value_visited = !node.visited;
+        while (true) {
+
+            if (!node.visited) {
+
+                while (node.getLavy() instanceof InternyVrchol) {
+                    if (((InternyVrchol) node.getLavy()).visited)
+                        break;
+                    node = (InternyVrchol) node.getLavy();
+                }
+                if (node.getLavy() instanceof ExternyVrchol)
+                    result.add((ExternyVrchol) node.getLavy());
+                if (node.getPravy() instanceof ExternyVrchol)
+                    result.add((ExternyVrchol) node.getPravy());
+                node.visited = true;
+
+            }
+            boolean goHigher = false;
+            if (node.getPravy() instanceof InternyVrchol) {
+                if (!((InternyVrchol) node.getPravy()).visited)
+                    node = (InternyVrchol) node.getPravy();
+                else
+                    goHigher = true;
+            } else {
+                goHigher = true;
+            }
+            if (goHigher) {
+                try {
+                    while (node.getParent().visited)
+                        node = node.getParent();
+                    node = node.getParent();
+                } catch (NullPointerException e) {
+                    return result;
+                }
+            }
+        }
+
+    }
+
+    public ArrayList<ExternyVrchol> getExterneVrcholi2() throws IOException { //todo remove exception
+        //clearVisited();
+        long size = file.length();
+        ArrayList<ExternyVrchol> result = new ArrayList<>();
+        if (Root == null || Root instanceof ExternyVrchol)
+            return result;
+        InternyVrchol node = (InternyVrchol) Root;
+        boolean value_visited = !node.visited;
+        while (true) {
+
+            if (node.visited != value_visited) {
+
+                while (node.getLavy() instanceof InternyVrchol) {
+                    if (((InternyVrchol) node.getLavy()).visited == value_visited)
+                        break;
+                    node = (InternyVrchol) node.getLavy();
+                }
+                if (node.getLavy() instanceof ExternyVrchol)
+                    result.add((ExternyVrchol) node.getLavy());
+                if (node.getPravy() instanceof ExternyVrchol)
+                    result.add((ExternyVrchol) node.getPravy());
+                node.visited = value_visited;
+
+            }
+            boolean goHigher = false;
+            if (node.getPravy() instanceof InternyVrchol) {
+                if (((InternyVrchol) node.getPravy()).visited != value_visited)
+                    node = (InternyVrchol) node.getPravy();
+                else
+                    goHigher = true;
+            } else {
+                goHigher = true;
+            }
+            if (goHigher) {
+                try {
+                    while (node.getParent().visited == value_visited)
+                        node = node.getParent();
+                    node = node.getParent();
+                } catch (NullPointerException e) {
+                    return result;
+                }
+            }
+        }
+
+    }
+
+
 
     private long getFreeAdresa() {
         if (freeAdresses.size() != 0) {

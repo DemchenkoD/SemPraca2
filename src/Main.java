@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException { //todo remove exception
 
         //GUI gui = new GUI();
 
@@ -33,6 +34,9 @@ public class Main {
         p =  hashing2.Find2(pacient);
         System.out.println("-----------------------------------------------------");
         //hashing2.Delete2(p);
+        ArrayList<ExternyVrchol> res = hashing2.getExterneVrcholi();
+        ArrayList<ExternyVrchol> res2 = hashing2.getExterneVrcholi();
+        ArrayList<ExternyVrchol> res3 = hashing2.getExterneVrcholi2();
         for (Pacient p2: pacienti)
             hashing2.Delete2(p2);
         hashing2.vypis();
