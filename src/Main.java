@@ -28,7 +28,14 @@ public class Main {
         //hashing2.Find2(new Pacient("", "", "0712200196", LocalDate.now(), 99));
         //TestClass test = new TestClass();
         //test.testFile(hashing, 5000 );
-
-
+        Pacient p = pacienti.get(2);
+        p = hashing2.Find2(pacienti.get(2));
+        p =  hashing2.Find2(pacient);
+        System.out.println("-----------------------------------------------------");
+        //hashing2.Delete2(p);
+        for (Pacient p2: pacienti)
+            hashing2.Delete2(p2);
+        hashing2.vypis();
+        System.out.println("Hello");
     }
 }

@@ -61,7 +61,7 @@ public class Hashing<T extends IData> {
         }
 
         //+Kontrola ValidCount
-        for (T zaznam : b.getRecords()) {
+        for (T zaznam : b.getValidRecords()) {
             if (data.myEquals(zaznam) == true) {
                 return zaznam;
             }

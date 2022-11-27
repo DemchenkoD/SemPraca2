@@ -23,6 +23,11 @@ public class Block<T extends IData> implements IRecord {
         }
         ValidCount = 0;
     }
+
+    public int getValidCount() {
+        return ValidCount;
+    }
+
     public boolean insertRecord(T paNew) {
         int indexExists = -99;
         for (int i = 0; i < records.size(); i++){
@@ -131,8 +136,11 @@ public class Block<T extends IData> implements IRecord {
         return 0;
     }
 
-    public ArrayList<T> getRecords() {
-        return records;
+    public ArrayList<T> getValidRecords() {
+        ArrayList<T> result = new ArrayList<>();
+        for(int i = 0; i < ValidCount; i++)
+            result.add(records.get(i));
+        return result;
     }
 
 

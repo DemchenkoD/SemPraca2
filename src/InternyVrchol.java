@@ -13,6 +13,10 @@ public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
         this.parent = paParent;
     }
 
+    public InternyVrchol getParent() {
+        return parent;
+    }
+
     public int getIndexSplitter() {
         return indexSplitter;
     }
@@ -47,6 +51,15 @@ public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
         else if (lavy == son)
             lavy = replacement;
     }
+    public IVrchol getBrother(IVrchol paBrother) {
+        if (paBrother == lavy)
+            return pravy;
+        else if (paBrother == pravy)
+            return lavy;
+        else
+            return null;
+    }
+
 
     @Override
     public int compareTo(InternyVrchol o) { //TODO Remove
