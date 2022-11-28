@@ -22,11 +22,13 @@ public class Main {
         Generator g = new Generator();
         ArrayList<Pacient> pacienti = g.genPatientsForFile(10);
         DynamicHashing<Pacient> hashing2 = new DynamicHashing<>("newFile.txt", "treeFile", "FreeBlocks", 10, pacient);
-        hashing2.Insert2(pacient);
+        hashing2.Insert(pacient);
         //for (Pacient p: pacienti)
         //    hashing2.Insert2(p);
         hashing2.vypis();
-        //hashing2.Find2(new Pacient("", "", "0712200196", LocalDate.now(), 99));
+        hashing2.Find(new Pacient("", "", "0712200196", LocalDate.now(), 99));
+
+
         TestClass test = new TestClass();
         test.testDynamicFile(hashing2, 500 );
 

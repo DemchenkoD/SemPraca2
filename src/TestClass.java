@@ -73,7 +73,7 @@ public class TestClass {
 
                 String diagnoza = g.genString(10);
                 p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
-                boolean insert_passed  = file.Insert2(p);
+                boolean insert_passed  = file.Insert(p);
                 if(!insert_passed) {
                     System.out.println("Insert didn't pass for patient" + p.toString());
                     removePacients.add(p);
@@ -85,13 +85,13 @@ public class TestClass {
             pacienti.remove(p);
 
         for (Pacient p: pacienti) {
-            Pacient found_patient = file.Find2(p);
+            Pacient found_patient = (Pacient) file.Find(p);
             if (!p.fullyCompare(found_patient)) {
                 System.out.println("Patient not equals");
                 return;
             }
-            file.Delete2(p);
-            found_patient = file.Find2(p);
+            file.Delete(p);
+            found_patient = (Pacient) file.Find(p);
             if (found_patient != null) {
                 System.out.println("Patient exists");
                 return;

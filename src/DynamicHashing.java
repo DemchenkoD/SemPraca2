@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DynamicHashing<T extends IData> extends Hashing {
+public class DynamicHashing<T extends IData> extends Hashing<T> {
     private String fileName;
     private String treeFileName;
     //private Strom strom;
@@ -19,17 +19,15 @@ public class DynamicHashing<T extends IData> extends Hashing {
     private T dataInitial;
 
     public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, int paBlockFactor, T paDataInitial) {
-        super();
+        super(paFileName, paBlockFactor, paDataInitial);
         this.fileName = paFileName;
         blockFactor = paBlockFactor;
         this.treeFileName = paTreeFileName; //TODO add read strom from file
         this.freeBlocksFileName = paFreeBlocksFileName;
         freeAdresses = new ArrayList<>();
         dataInitial = paDataInitial;
-        //strom = new Strom();
         Root = new ExternyVrchol(null, -1);
-        //Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
-        //blockSize = b.getSize();
+
         try {
             this.file = new RandomAccessFile(paFileName, "rw");
             // file.write(b.ToByteArray());
@@ -37,10 +35,6 @@ public class DynamicHashing<T extends IData> extends Hashing {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        //InternyVrchol startVrchol = new InternyVrchol();
-        //startVrchol.setAdresaBloku(0);
-
-        //strom.insert(startVrchol);
     }
 
     public void vypis() {
@@ -71,7 +65,7 @@ public class DynamicHashing<T extends IData> extends Hashing {
         System.out.println();
     }
 
-    public boolean Insert2(T data) {
+    public boolean Insert(T data) {
         BitSet hash = data.getHash();
         Block<T> b = new Block<>(blockFactor, data.getClass());
         ExternyVrchol extVrchol = getExternyVrchol(hash);
@@ -107,160 +101,57 @@ public class DynamicHashing<T extends IData> extends Hashing {
         }
     }
 
-    public T Find2(T data) {
-        BitSet hash = data.getHash();
-        Block<T> b = new Block<>(blockFactor, data.getClass());
+    @Override
+    protected long getAdresa(BitSet hash) {
         long adresaBloku = getExternyVrchol(hash).getAdresaBloku();
-        byte[] blockBytes = new byte[b.getSize()];
-        try {
-
-            file.seek(adresaBloku);
-            file.read(blockBytes);
-            b.FromByteArray(blockBytes);
-            for (T zaznam : b.getValidRecords()) {
-                if (data.myEquals(zaznam) == true) {
-                    return zaznam;
-                }
-            }
-            return null;
-        } catch (IOException ex) {
-            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+        return adresaBloku;
     }
-
-    public boolean Delete2(T data) {
-        BitSet hash = data.getHash();
-        Block<T> b = new Block<>(blockFactor, data.getClass());
+    @Override
+    public void successfulDeletion(Block blok, BitSet hash) {
+        long adresaBloku = getAdresa(hash);
         ExternyVrchol extVrchol = getExternyVrchol(hash);
-        long adresaBloku = extVrchol.getAdresaBloku();
-        byte[] blockBytes = new byte[b.getSize()];
         try {
-
             file.seek(adresaBloku);
-            file.read(blockBytes);
-            b.FromByteArray(blockBytes);
-            boolean result = b.deleteRecord(data);
-            if (result) {
+            file.write(blok.ToByteArray());
+            while (canBeUnited(extVrchol)) {
+                ArrayList<T> allData =blok.getValidRecords();
+                ExternyVrchol brother = (ExternyVrchol) extVrchol.getParent().getBrother(extVrchol);
+                if (brother.getAdresaBloku() != -1) {
+                    Block<T> block2 = getBlock(brother);
+
+                    allData.addAll(block2.getValidRecords());
+                }
+
+                extVrchol = uniteSons(extVrchol.getParent());
+                blok = getBlock(extVrchol);
+                adresaBloku = extVrchol.getAdresaBloku();
+
+
+                for (T t_data : allData) //TODO change
+                    blok.insertRecord(t_data);
+
                 file.seek(adresaBloku);
-                file.write(b.ToByteArray());
-                while (canBeUnited(extVrchol)) {
-                    ArrayList<T> allData = b.getValidRecords();
-                    ExternyVrchol brother = (ExternyVrchol) extVrchol.getParent().getBrother(extVrchol);
-                    if (brother.getAdresaBloku() != -1) {
-                        Block<T> block2 = getBlock(brother);
-
-                        allData.addAll(block2.getValidRecords());
-                    }
-
-                    extVrchol = uniteSons(extVrchol.getParent());
-                    b = getBlock(extVrchol);
-                    adresaBloku = extVrchol.getAdresaBloku();
-
-
-                    for (T t_data : allData)
-                        b.insertRecord(t_data);
-
-                    file.seek(adresaBloku);
-                    file.write(b.ToByteArray());
-                }
-                if (b.getValidCount() == 0) { //empty block, has to be deleted
-                    freeAdresses.add(extVrchol.getAdresaBloku());
-                    extVrchol.setAdresaBloku(-1);
-                    return result;
-                }
-                cleanFreeBlocks();
-                System.out.println("DELETED" + data.toString());
-                vypis();
+                file.write(blok.ToByteArray());
             }
-            return result;
+            if (blok.getValidCount() == 0) { //empty block, has to be deleted
+                freeAdresses.add(extVrchol.getAdresaBloku());
+                extVrchol.setAdresaBloku(-1);
+                return;
+            }
+            cleanFreeBlocks();
+            //vypis();
         } catch (IOException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-
-    public boolean Delete3(T data) {
-        BitSet hash = data.getHash();
-        Block<T> b = new Block<>(blockFactor, data.getClass());
-        ExternyVrchol extVrchol = getExternyVrchol(hash);
-        long adresaBloku = extVrchol.getAdresaBloku();
-        byte[] blockBytes = new byte[b.getSize()];
-        try {
-
-            file.seek(adresaBloku);
-            file.read(blockBytes);
-            b.FromByteArray(blockBytes);
-            boolean result = b.deleteRecord(data);
-            if (result) {
-                file.seek(adresaBloku);
-                file.write(b.ToByteArray());
-                if (canBeUnited(extVrchol)) { //check if extVrchol can be united with another vrchol
-                    ArrayList<T> allData = b.getValidRecords();
-                    ExternyVrchol brother = (ExternyVrchol) extVrchol.getParent().getBrother(extVrchol);
-                    if (brother.getAdresaBloku() != -1) {
-                        Block<T> block2 = getBlock(brother);
-
-                        allData.addAll(block2.getValidRecords());
-                    }
-                    /*
-                    ExternyVrchol newVrchol = uniteSons(extVrchol.getParent());
-                    b = getBlock(newVrchol);
-                    adresaBloku = newVrchol.getAdresaBloku();
-                     */
-                    extVrchol = uniteSons(extVrchol.getParent());
-                    b = getBlock(extVrchol);
-                    adresaBloku = extVrchol.getAdresaBloku();
-
-
-                    for (T t_data : allData)
-                        b.insertRecord(t_data);
-
-                    file.seek(adresaBloku);
-                    file.write(b.ToByteArray());
-                } else if (b.getValidCount() == 0) { //empty block, has to be deleted
-                    freeAdresses.add(extVrchol.getAdresaBloku());
-                    extVrchol.setAdresaBloku(-1);
-                    return result;
-                }
-                //uniteHigher(extVrchol);
-                cleanFreeBlocks();
-                System.out.println("DELETED" + data.toString());
-                vypis();
-            }
-            return result;
-        } catch (IOException ex) {
-            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         }
     }
 
     private void clearBlock(long paAdresaBloku) {
 
         Block<T> block = new Block<>(blockFactor, dataInitial.getClass());
-        //long adresa = paAdresaBloku;
         try {
-            //if (paAdresaBloku < file.length()) {
             file.seek(paAdresaBloku);
             file.write(block.ToByteArray());
             freeAdresses.add(paAdresaBloku);
-            //TODO pridat - ak adresa + blocksize = size suboru -> vymazat block a pozret predchadzajuci
-                /*
-                while (adresa + block.getSize() == file.length()) { //it's last block
-                    if (block.getValidCount() == 0) {
-                        freeAdresses.remove(adresa);
-                        file.setLength(adresa);
-                        if (adresa != 0) {
-                            adresa = adresa - block.getSize();
-                            block = getBlock(adresa);
-                        } else
-                            break;
-                    } else
-                        break;
-                }
-                */
-
-            // }
         } catch (IOException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -361,9 +252,6 @@ public class DynamicHashing<T extends IData> extends Hashing {
 
 
     private ExternyVrchol getExternyVrchol(BitSet key) {
-        //if (!Root.isInternal()){
-        //    return Root;
-        //}
         IVrchol vrchol = Root;
         while (vrchol instanceof InternyVrchol) {
             vrchol = ((InternyVrchol) vrchol).getSon(key);
@@ -383,8 +271,8 @@ public class DynamicHashing<T extends IData> extends Hashing {
         }
         r.setLavy(new ExternyVrchol(r, -1));
         r.setPravy(new ExternyVrchol(r, -1));
-        for (T data : allData)
-            Insert2(data);
+        for (T data : allData) //TODO change
+            Insert(data);
         return true;
     }
 
@@ -436,7 +324,7 @@ public class DynamicHashing<T extends IData> extends Hashing {
 
     }
 
-    public void writeTreeToFile(String nazovSuboru) {// TODO check if tree has only one extVrchol
+    public void writeTreeToFile(String nazovSuboru) {
         try {
             FileWriter writer = new FileWriter(nazovSuboru);
             ArrayList<ExternyVrchol> extVrcholy = getExterneVrcholi();
@@ -476,7 +364,6 @@ public class DynamicHashing<T extends IData> extends Hashing {
                         i = i-2;
                         continue;
                     }
-                    //tmp = new InternyVrchol(tmp.getParent(), tmp.getParent().getIndexSplitter() + 1);
                     if (parts[0].charAt(i) == '0')
                         tmp = ((InternyVrchol) tmp).getLavy();
                     else if (parts[0].charAt(i) == '1')
@@ -491,26 +378,6 @@ public class DynamicHashing<T extends IData> extends Hashing {
         } catch (IOException e) {
 
         }
-    }
-    private ExternyVrchol createExtVrcholOnPosition(String adresa) {
-        if (adresa.contains("")) {
-            Root = new ExternyVrchol(null, -1);
-            return (ExternyVrchol) Root;
-        }
-        IVrchol tmp = Root;
-        for (int i = 0; i < adresa.length(); i++) {
-
-            if(!(tmp instanceof InternyVrchol)) {
-                tmp = new InternyVrchol(tmp.getParent(), tmp.getParent().getIndexSplitter()+1);
-            }
-
-            if (adresa.charAt(i) == '0') {
-
-            } else if (adresa.charAt(i) == '1') {
-
-            }
-        }
-        return null;
     }
 
     private long getFreeAdresa() {
