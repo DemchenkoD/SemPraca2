@@ -92,9 +92,7 @@ public class Block<T extends IData> implements IRecord {
     public byte[] ToByteArray() {
         ByteArrayOutputStream hlpByteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream hlpOutStream = new DataOutputStream(hlpByteArrayOutputStream) ;
-
         try {
-
             hlpOutStream.writeInt(ValidCount);
             for (int i = 0; i < blockFactor; i++) {
                 hlpOutStream.write(records.get(i).ToByteArray());
@@ -105,13 +103,10 @@ public class Block<T extends IData> implements IRecord {
             throw new IllegalStateException("Error during conversion to byte array.");
         }
 
-        // — hlpOutStream.write(dummy.ToByteArray ())
-
     }
 
     @Override
     public void FromByteArray(byte[] paArray) {
-//+validcount
         ByteArrayInputStream hlpByteArrayInputStream = new ByteArrayInputStream(paArray) ;
 
         DataInputStream hlpStream = new DataInputStream(hlpByteArrayInputStream );
@@ -142,8 +137,6 @@ public class Block<T extends IData> implements IRecord {
             result.add(records.get(i));
         return result;
     }
-
-
 
 }
 

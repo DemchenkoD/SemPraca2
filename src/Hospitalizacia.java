@@ -1,10 +1,9 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.BitSet;
 
-public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospitalizacia>{
+public class Hospitalizacia implements IData<Hospitalizacia>{
     private final String format = "yyyy-MM-dd HH:mm:ss";
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
     private final int maxLengthDiagnoza = 20;
@@ -65,37 +64,6 @@ public class Hospitalizacia implements Comparable<Hospitalizacia>, IData<Hospita
 
     public void setDiagnoza(String diagnoza) {
         this.diagnoza = diagnoza;
-    }
-    /*
-    public String toFile() {
-        if (d_konca != null)
-            return ("H;" + nazovNemocnice + ';' + rodCisloPacienta + ';' + d_zaciatku.format(formatter) + ';' + d_konca.format(formatter) + ';' + diagnoza + ';' + poistovna + '\n');
-        else
-            return ("H;" + nazovNemocnice + ';' + rodCisloPacienta + ';' + d_zaciatku.format(formatter) + ';' + "null" + ';' + diagnoza +  ';' + poistovna +'\n');
-    }
-
-*/
-    @Override
-    public int compareTo(Hospitalizacia o) {
-        /*
-        if (o.bolHospitalizovany && o.rodCisloPacienta.equals("") && o.nazovNemocnice.equals("") && o.d_zaciatku != null) {
-            if ( this.d_zaciatku.isAfter(o.d_zaciatku) || this.d_zaciatku.isBefore(o.d_zaciatku)) {
-                return 0;
-            } else if (this.d_konca == null)
-                return 0;
-            else if (this.d_konca.isAfter(o.d_zaciatku) || this.d_konca.isBefore(o.d_zaciatku)) {
-                return 0;
-            } else
-                return 99;
-        } else if (o.rodCisloPacienta.equals("") && o.nazovNemocnice.equals("") && o.d_zaciatku != null && o.d_konca != null) {
-            if (this.d_konca != null && this.d_zaciatku.isAfter(o.d_zaciatku) && this.d_konca.isBefore(o.d_konca))
-                return 0;
-            else
-                return 99;
-        } else
-
-         */
-            return this.d_zaciatku.compareTo(o.d_zaciatku);
     }
 
     @Override

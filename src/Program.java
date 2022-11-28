@@ -8,12 +8,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Program {
-    BsTree<Pacient> pacienti;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public Program() {
-        pacienti = new BsTree<Pacient>();
-
     }
     public ArrayList<String> fillDatabase(String nemNum, String pacNum, String hospNum) {
         ArrayList<String> logs = new ArrayList<>();
@@ -24,7 +21,7 @@ public class Program {
             int hositalizacie_num = Integer.parseInt(hospNum);
             g.generate(nemocnici_num, pacienti_num, hositalizacie_num);
             //nemocnice.multipleInsert(g.getNemocnice());
-            pacienti.multipleInsert(g.getPacienti());
+            //pacienti.multipleInsert(g.getPacienti());
             logs.add("Data boli uspesne vygenerovane");
         } catch (Exception e) {
             logs.add(e.getMessage());

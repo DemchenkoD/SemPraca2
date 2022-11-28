@@ -6,7 +6,7 @@ import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Pacient implements Comparable<Pacient>, IData<Pacient> {
+public class Pacient implements IData<Pacient> {
     private final int maxLengthMeno = 15;
     private int menoLength = 0;
     private int priezviskoLength = 0;
@@ -121,16 +121,7 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
     public String toString() {
         return (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna);
     }
-    /*
-    public String toFile() {
-        String result = "P;" +  meno + ';' + priezvisko + ';' + rod_cislo + ';'+ d_narodenia.toString() + ';' + zdr_poistovna + '\n';
-        for (Hospitalizacia h: hospitalizacie ) {
-            result += h.toFile();
-        }
-        return result;
-    }
 
-     */
     public String toStringHospitalizacie() {
         String result = "";
         for (Hospitalizacia h: hospitalizacie) {
@@ -140,28 +131,10 @@ public class Pacient implements Comparable<Pacient>, IData<Pacient> {
     }
 
     @Override
-    public int compareTo(Pacient o) {
-        if (!o.rod_cislo.equals("")) {
-            if (Long.parseLong(this.rod_cislo) < Long.parseLong(o.rod_cislo)) {
-                return -1;
-            } else if (Long.parseLong(this.rod_cislo) > Long.parseLong(o.rod_cislo))
-                return 1;
-            else
-                return 0;
-        } else {
-            if (this.meno.equals(o.meno) && this.priezvisko.equals(o.priezvisko))
-                return 0;
-            else
-                return 99;
-        }
-    }
-
-
-    @Override
     public int getSize() {
         return Character.BYTES * (maxLengthMeno + maxLengthPriezvisko + maxLengtRodCislo + 10) +
                 4*Integer.BYTES + maxLengtHospitalizacie*((new Hospitalizacia(0, null, null, null)).getSize()); //TODO addHospitalizacie size
-                //also added number of hospitalizations
+
     }
     @Override
     public BitSet getHash() {

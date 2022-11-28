@@ -390,8 +390,12 @@ public class DynamicHashing<T extends IData> extends Hashing {
 
     public ArrayList<ExternyVrchol> getExterneVrcholi() {
         ArrayList<ExternyVrchol> result = new ArrayList<>();
-        if (Root == null || Root instanceof ExternyVrchol)
+        if (Root == null)
             return result;
+        if (Root instanceof ExternyVrchol) {
+            result.add((ExternyVrchol) Root);
+            return result;
+        }
         InternyVrchol node = (InternyVrchol) Root;
         boolean value_visited = !node.visited;
         while (true) {
@@ -452,7 +456,12 @@ public class DynamicHashing<T extends IData> extends Hashing {
             while (reader.hasNextLine()) {
                 String data = reader.nextLine();
                 String parts[] = data.split(";");
+                if(parts[0].equals("null")) {// that's Root and it's ExtVrchol
+                    Root = new ExternyVrchol(null, Long.parseLong(parts[1]));
+                    return;
+                }
                 IVrchol tmp = Root;
+
 
                 for(int i = 0; i < parts[0].length(); i++){ //create IntVrchol for every bit in adress
                     if (i == 0 && !(Root instanceof InternyVrchol)) { //Root has to be created

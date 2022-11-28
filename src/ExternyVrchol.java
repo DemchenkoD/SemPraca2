@@ -1,6 +1,6 @@
 import java.util.BitSet;
 
-public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
+public class ExternyVrchol implements IVrchol{
     private InternyVrchol parent;
     private long adresaBloku;
     public boolean visited;
@@ -21,8 +21,8 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
     public String getKey() {
         //BitSet key;
         String result = null;
-        char[] bits = new char [parent.getIndexSplitter() + 1];
         if (parent != null) {
+            char[] bits = new char [parent.getIndexSplitter() + 1];
             //key = new BitSet(parent.getIndexSplitter() + 1);
             InternyVrchol tmp_parent = parent;
             IVrchol tmp_son = this;
@@ -38,7 +38,7 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
             result = String.valueOf(bits);
 
         } else {
-            //key = null;
+            result = "null";
         }
         return result;//key;
     }
@@ -63,9 +63,5 @@ public class ExternyVrchol implements Comparable<ExternyVrchol>, IVrchol{
         return false;
     }
 
-    @Override
-    public int compareTo(ExternyVrchol o) {
-        return 0;
-    }
 
 }
