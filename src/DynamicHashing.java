@@ -106,6 +106,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         long adresaBloku = getExternyVrchol(hash).getAdresaBloku();
         return adresaBloku;
     }
+
     @Override
     public void successfulDeletion(Block blok, BitSet hash) {
         long adresaBloku = getAdresa(hash);
@@ -114,7 +115,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
             file.seek(adresaBloku);
             file.write(blok.ToByteArray());
             while (canBeUnited(extVrchol)) {
-                ArrayList<T> allData =blok.getValidRecords();
+                ArrayList<T> allData = blok.getValidRecords();
                 ExternyVrchol brother = (ExternyVrchol) extVrchol.getParent().getBrother(extVrchol);
                 if (brother.getAdresaBloku() != -1) {
                     Block<T> block2 = getBlock(brother);
@@ -250,9 +251,36 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         }
     }
 
+    private Block<T> getBlockOrCreate(ExternyVrchol extVrchol) {
+        Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
+        long adresaBloku = extVrchol.getAdresaBloku();
+        byte[] blockBytes = new byte[b.getSize()];
+        try {
+            if (adresaBloku != -1) { // block has pointer
+                file.seek(adresaBloku);
+                file.read(blockBytes);
+                b.FromByteArray(blockBytes);
+            } else {
+                adresaBloku = getFreeAdresa();
+                extVrchol.setAdresaBloku(adresaBloku);
+                file.seek(adresaBloku);
+                file.write(b.ToByteArray());
+            }
+            return b;
+        } catch (IOException ex) {
+            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
 
     private ExternyVrchol getExternyVrchol(BitSet key) {
-        IVrchol vrchol = Root;
+        return getExternyVrcholWithStartPoint(Root, key);
+
+    }
+
+    private ExternyVrchol getExternyVrcholWithStartPoint(IVrchol startVrchol, BitSet key) {
+        IVrchol vrchol = startVrchol;
         while (vrchol instanceof InternyVrchol) {
             vrchol = ((InternyVrchol) vrchol).getSon(key);
         }
@@ -260,7 +288,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
 
     }
 
-    private boolean transformAndInsert(ExternyVrchol extVrchol, ArrayList<T> allData) {
+    private boolean transform(ExternyVrchol extVrchol) {
         InternyVrchol r;
         if (extVrchol.getParent() == null) { //it's root
             r = new InternyVrchol(null, 0);
@@ -271,10 +299,70 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         }
         r.setLavy(new ExternyVrchol(r, -1));
         r.setPravy(new ExternyVrchol(r, -1));
-        for (T data : allData) //TODO change
-            Insert(data);
         return true;
     }
+
+    private boolean transformAndInsert(ExternyVrchol extVrchol, ArrayList<T> allData) {
+        InternyVrchol r;
+        ExternyVrchol vrchol = extVrchol;
+        while (true) {
+            if (vrchol.getParent() == null) { //it's root
+                r = new InternyVrchol(null, 0);
+                Root = r;
+            } else {
+                r = new InternyVrchol(vrchol.getParent(), vrchol.getParent().getIndexSplitter() + 1);
+                vrchol.getParent().setSon(extVrchol, r);
+            }
+            r.setLavy(new ExternyVrchol(r, -1));
+            r.setPravy(new ExternyVrchol(r, -1));
+            int leftInserted = 0;
+            int rightInserted = 0;
+            BitSet b = null;
+            for (T data : allData) { //TODO add functionality in case allData is empty
+                b = data.getHash();
+                if (r.goRight(b))
+                    rightInserted++;
+                else
+                    leftInserted++;
+            }
+            if (b == null)
+                return true;
+            if (rightInserted == 0 || leftInserted == 0) { //vsetke data budu v jednom vrchole, treba ho rozdelit
+                vrchol = (ExternyVrchol) r.getSon(b);
+            } else {
+                multipleInsertIntoSons(r, allData);
+                break;
+            }
+
+
+        }
+        return true;
+    }
+
+    public void multipleInsertIntoSons(InternyVrchol parent, ArrayList<T> allData) {
+        ExternyVrchol extVrchol_lavy = (ExternyVrchol) parent.getLavy();
+        ExternyVrchol extVrchol_pravy = (ExternyVrchol) parent.getPravy();
+        Block<T> b_lavy = getBlockOrCreate(extVrchol_lavy);
+        Block<T> b_pravy = getBlockOrCreate(extVrchol_pravy);
+
+        for (T data : allData) {
+            if (parent.goRight(data.getHash()))
+                b_pravy.insertRecord(data);
+            else
+                b_lavy.insertRecord(data);
+        }
+        try {
+            file.seek(extVrchol_lavy.getAdresaBloku());
+            file.write(b_lavy.ToByteArray());
+            file.seek(extVrchol_pravy.getAdresaBloku());
+            file.write(b_pravy.ToByteArray());
+
+        } catch (IOException ex) {
+            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 
     public ArrayList<ExternyVrchol> getExterneVrcholi() {
         ArrayList<ExternyVrchol> result = new ArrayList<>();
@@ -328,7 +416,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         try {
             FileWriter writer = new FileWriter(nazovSuboru);
             ArrayList<ExternyVrchol> extVrcholy = getExterneVrcholi();
-            for(ExternyVrchol extVrchol: extVrcholy)
+            for (ExternyVrchol extVrchol : extVrcholy)
                 writer.write(extVrchol.toString());
 
             writer.close();
@@ -336,6 +424,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
 
         }
     }
+
     public void readTreeFromFile(String nazovSuboru) {
         Root = null;
         try {
@@ -344,24 +433,24 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
             while (reader.hasNextLine()) {
                 String data = reader.nextLine();
                 String parts[] = data.split(";");
-                if(parts[0].equals("null")) {// that's Root and it's ExtVrchol
+                if (parts[0].equals("null")) {// that's Root and it's ExtVrchol
                     Root = new ExternyVrchol(null, Long.parseLong(parts[1]));
                     return;
                 }
                 IVrchol tmp = Root;
 
 
-                for(int i = 0; i < parts[0].length(); i++){ //create IntVrchol for every bit in adress
+                for (int i = 0; i < parts[0].length(); i++) { //create IntVrchol for every bit in adress
                     if (i == 0 && !(Root instanceof InternyVrchol)) { //Root has to be created
                         Root = new InternyVrchol(null, 0);
                         tmp = Root;
-                        ((InternyVrchol)tmp).setLavy(new ExternyVrchol((InternyVrchol)tmp, -1));
-                        ((InternyVrchol)tmp).setPravy(new ExternyVrchol((InternyVrchol)tmp, -1));
+                        ((InternyVrchol) tmp).setLavy(new ExternyVrchol((InternyVrchol) tmp, -1));
+                        ((InternyVrchol) tmp).setPravy(new ExternyVrchol((InternyVrchol) tmp, -1));
                     }
                     if (tmp instanceof ExternyVrchol) {
-                        transformAndInsert((ExternyVrchol) tmp, new ArrayList<>()); //TODO change
+                        transform((ExternyVrchol) tmp); //TODO change
                         tmp = tmp.getParent();
-                        i = i-2;
+                        i = i - 2;
                         continue;
                     }
                     if (parts[0].charAt(i) == '0')

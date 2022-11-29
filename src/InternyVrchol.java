@@ -66,6 +66,16 @@ public class InternyVrchol implements Comparable<InternyVrchol>, IVrchol{
 
         return false;
     }
+    public boolean goRight(BitSet b) {
+        int val = b.get(indexSplitter)? 1 : 0;
+        if ( val == 1)
+            return true;
+        else
+            return false;
+
+    }
+
+
 
     @Override
     public int compareTo(InternyVrchol o) { //TODO Remove

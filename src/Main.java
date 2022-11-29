@@ -30,7 +30,7 @@ public class Main {
 
 
         TestClass test = new TestClass();
-        test.testDynamicFile(hashing2, 500 );
+        test.testFile(hashing2, 500 );
 
         System.out.println("-----------------------------------------------------");
 

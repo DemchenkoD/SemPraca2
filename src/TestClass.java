@@ -27,12 +27,12 @@ public class TestClass {
 
                 String diagnoza = g.genString(10);
                 p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
-                boolean insert_passed  = file.Insert(p);
-                if(!insert_passed) {
-                    System.out.println("Insert didn't pass for patient" + p.toString());
-                    removePacients.add(p);
-                    break;
-                }
+            }
+            boolean insert_passed  = file.Insert(p);
+            if(!insert_passed) {
+                System.out.println("Insert didn't pass for patient" + p.toString());
+                removePacients.add(p);
+                break;
             }
         }
         for (Pacient p: removePacients)
