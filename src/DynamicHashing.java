@@ -6,34 +6,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DynamicHashing<T extends IData> extends Hashing<T> {
-    private String fileName;
+    //private String fileName;
     private String treeFileName;
     //private Strom strom;
     private String freeBlocksFileName;
-    int blockSize;
-    int blockFactor;
+    //int blockSize;
+    //int blockFactor;
     private IVrchol Root;
-    private RandomAccessFile file;
+    //private RandomAccessFile file;
 
-    private ArrayList<Long> freeAdresses;
-    private T dataInitial;
+    public ArrayList<Long> freeAdresses; //TODO change to private
+    //private T dataInitial;
 
     public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, int paBlockFactor, T paDataInitial) {
         super(paFileName, paBlockFactor, paDataInitial);
-        this.fileName = paFileName;
+        //this.fileName = paFileName;
         blockFactor = paBlockFactor;
         this.treeFileName = paTreeFileName; //TODO add read strom from file
         this.freeBlocksFileName = paFreeBlocksFileName;
         freeAdresses = new ArrayList<>();
-        dataInitial = paDataInitial;
+        //dataInitial = paDataInitial;
         Root = new ExternyVrchol(null, -1);
 
-        try {
-            this.file = new RandomAccessFile(paFileName, "rw");
+        //try {
+        //    this.file = new RandomAccessFile(paFileName, "rw");
             // file.write(b.ToByteArray());
-        } catch (IOException e) {
-            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
-        }
+        //} catch (IOException e) {
+        //    Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
+        //}
 
     }
 
@@ -44,7 +44,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         System.out.println();
         while (true) {
             try {
-                long address = counter * b.getSize();
+                long address = (counter + 1) * b.getSize();
 
                 if (address >= file.length())
                     break;
@@ -54,7 +54,9 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 b.FromByteArray(blockBytes);
                 b.vypis();
                 counter++;
-
+                //if (address > file.length())
+                //    break;
+                System.out.println("LENGTH : "+file.length());
             } catch (EOFException e) {
                 System.out.println("EOF");
                 break;
@@ -62,6 +64,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 System.out.println("Error");
             }
         }
+
         System.out.println();
     }
 
@@ -128,7 +131,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 adresaBloku = extVrchol.getAdresaBloku();
 
 
-                for (T t_data : allData) //TODO change
+                for (T t_data : allData) //TODO check
                     blok.insertRecord(t_data);
 
                 file.seek(adresaBloku);
@@ -137,6 +140,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
             if (blok.getValidCount() == 0) { //empty block, has to be deleted
                 freeAdresses.add(extVrchol.getAdresaBloku());
                 extVrchol.setAdresaBloku(-1);
+                cleanFreeBlocks();
                 return;
             }
             cleanFreeBlocks();
@@ -311,7 +315,8 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 Root = r;
             } else {
                 r = new InternyVrchol(vrchol.getParent(), vrchol.getParent().getIndexSplitter() + 1);
-                vrchol.getParent().setSon(extVrchol, r);
+                vrchol.getParent().setSon(vrchol, r);
+                //vrchol.getParent().setSon(extVrchol, r);
             }
             r.setLavy(new ExternyVrchol(r, -1));
             r.setPravy(new ExternyVrchol(r, -1));

@@ -6,10 +6,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class Hashing<T extends IData> {
-    private int blockFactor;
+    protected int blockFactor;
     private int numbOfBlocks;
-    private RandomAccessFile file;
-    private T dataInitial;
+    protected RandomAccessFile file;
+    protected T dataInitial;
 
     public Hashing(String paFileName, int paBlockFactor, int countData, T pDataInitial) {
         this.blockFactor = paBlockFactor;
@@ -60,6 +60,8 @@ public abstract class Hashing<T extends IData> {
         b = new Block<>(blockFactor, data.getClass());
         long adresaBloku = getAdresa(hash);
         byte[] blockBytes = new byte[b.getSize()];
+        if (adresaBloku == -1)
+            return null;
         try {
 
             file.seek(adresaBloku);
