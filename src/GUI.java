@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame{
     private JPanel file_panel, mainPanel,panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel_gen;
-    private JButton b_stat_file, b_dyn_file, b1, b2, b3, b4, b5, b6, b7, b_gen;
+    private JButton b_stat_file_new, b_stat_file_old,  b_dyn_file_old, b_dyn_file_new,  b1, b2, b3, b4, b5, b6, b7, b_gen;
     private JButton b1_confirm, b2_confirm, b3_confirm, b4_confirm,b5_confirm, b6_confirm,b7_confirm, b_gen_confirm;
     private JButton b_main;
     private Program mp = new Program();
@@ -21,8 +21,12 @@ public class GUI extends JFrame{
     private JTextField rod_cislo;
     private JTextField meno;
     private JTextField priezvisko;
-    private JTextField nemocnica;
-    private JTextField nemocnica_nahrada;
+    private JTextField fileName;
+    private JTextField treeFileName;
+    private JTextField freeBlocksFileName;
+    private JTextField confFileName;
+    private JTextField blockFactory;
+
     private JTextField poistovna;
     private JFormattedTextField d_narodenia;
     private JFormattedTextField d_hosp;
@@ -36,7 +40,8 @@ public class GUI extends JFrame{
     private JTextField pacienti_output;
     private JTextField nemocnice_input;
     private JTextField nemocnice_output;
-    boolean staticFile = false;
+    private boolean staticFile = false;
+    private boolean newFile = false;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -344,15 +349,67 @@ public class GUI extends JFrame{
         file_panel = new JPanel();
         file_panel.setLayout(null);
 
-        b_stat_file = new JButton("Static file");
-        b_stat_file.addActionListener(new addButtonListener());
-        b_stat_file.setBounds(20, 100, 400, 40);
-        file_panel.add(b_stat_file);
+        JLabel label_file = new JLabel("File name: ");
+        label_file.setBounds(10, 20,120, 25);
+        file_panel.add(label_file);
 
-        b_dyn_file = new JButton("Dynamic file");
-        b_dyn_file.addActionListener(new addButtonListener());
-        b_dyn_file.setBounds(20, 200, 400, 40);
-        file_panel.add(b_dyn_file);
+        fileName = new JTextField(30);
+        fileName.setBounds(150,20,165,25);
+        file_panel.add(fileName);
+
+        JLabel label_treeFile = new JLabel("Tree file name: ");
+        label_treeFile.setBounds(10, 70,120, 25);
+        file_panel.add(label_treeFile);
+
+        treeFileName = new JTextField(30);
+        treeFileName.setBounds(150,70,165,25);
+        file_panel.add(treeFileName);
+
+        JLabel label_freeBlocks = new JLabel("Free blocks file name: ");
+        label_freeBlocks.setBounds(10, 120,120, 25);
+        file_panel.add(label_freeBlocks);
+
+        freeBlocksFileName = new JTextField(30);
+        freeBlocksFileName.setBounds(150,120,165,25);
+        file_panel.add(freeBlocksFileName);
+
+        JLabel label_conf = new JLabel("Configurations file name: ");
+        label_conf.setBounds(10, 170,120, 25);
+        file_panel.add(label_conf);
+
+        confFileName = new JTextField(30);
+        confFileName.setBounds(150,170,165,25);
+        file_panel.add(confFileName);
+
+        JLabel label_block_factory = new JLabel("Block factory: ");
+        label_block_factory.setBounds(10, 220,120, 25);
+        file_panel.add(label_block_factory);
+
+        blockFactory = new JTextField(30);
+        blockFactory.setBounds(150,220,165,25);
+        file_panel.add(blockFactory);
+
+
+
+        b_stat_file_old = new JButton("Old Static file");
+        b_stat_file_old.addActionListener(new addButtonListener());
+        b_stat_file_old.setBounds(20, 450, 400, 40);
+        file_panel.add(b_stat_file_old);
+
+        b_dyn_file_old = new JButton("Old Dynamic file");
+        b_dyn_file_old.addActionListener(new addButtonListener());
+        b_dyn_file_old.setBounds(520, 450, 400, 40);
+        file_panel.add(b_dyn_file_old);
+
+        b_stat_file_new = new JButton("New Static file");
+        b_stat_file_new.addActionListener(new addButtonListener());
+        b_stat_file_new.setBounds(20, 500, 400, 40);
+        file_panel.add(b_stat_file_new);
+
+        b_dyn_file_new = new JButton("New Dynamic file");
+        b_dyn_file_new.addActionListener(new addButtonListener());
+        b_dyn_file_new.setBounds(520, 500, 400, 40);
+        file_panel.add(b_dyn_file_new);
 
         add(file_panel);
 
@@ -460,14 +517,27 @@ public class GUI extends JFrame{
             String str_logs = "";
             getContentPane().removeAll();
             switch (ae.getActionCommand()) {
-                case "Static file":
+                case "Old Static file":
                     staticFile = true;
+                    newFile = false;
                     createMainPanel();
                     addMainPanel();
-
                     break;
-                case "Dynamic file":
+                case "New Static file":
+                    staticFile = true;
+                    newFile = true;
+                    createMainPanel();
+                    addMainPanel();
+                    break;
+                case "Old Dynamic file":
                     staticFile = false;
+                    newFile = false;
+                    createMainPanel();
+                    addMainPanel();
+                    break;
+                case "New Dynamic file":
+                    staticFile = false;
+                    newFile = true;
                     createMainPanel();
                     addMainPanel();
                     break;
