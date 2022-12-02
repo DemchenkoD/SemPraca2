@@ -1,11 +1,11 @@
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Hashing<T extends IData> {
+public class Hashing<T extends IData> {
     protected int blockFactor;
     private int numbOfBlocks;
     protected RandomAccessFile file;
@@ -34,7 +34,7 @@ public abstract class Hashing<T extends IData> {
 
     }
 
-    public Hashing(String paFileName, int paBlockFactor, T pDataInitial) {
+    protected Hashing(String paFileName, int paBlockFactor, T pDataInitial) {
         this.blockFactor = paBlockFactor;
         this.dataInitial = pDataInitial;
         try {
@@ -43,6 +43,39 @@ public abstract class Hashing<T extends IData> {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    public Hashing(String paFileName, String confFileName, T pDataInitial) {
+        this.dataInitial = pDataInitial;
+        readConfFromFile(confFileName);
+        try {
+            this.file = new RandomAccessFile(paFileName, "rw");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void readConfFromFile(String nazovSuboru) {
+        try {
+            Scanner sc = new Scanner(new File(nazovSuboru));
+            sc.useDelimiter(";");
+            this.numbOfBlocks = sc.nextInt();
+            this.blockFactor = sc.nextInt();
+            sc.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void writeConfToFile(String nazovSuboru) {
+        try {
+            FileWriter writer = new FileWriter(nazovSuboru);
+            writer.write(this.numbOfBlocks + ";");
+            writer.write(this.blockFactor + ";");
+            writer.close();
+        } catch (IOException e) {
+
+        }
     }
 
     public int getBlockFactor() {

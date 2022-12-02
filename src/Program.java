@@ -8,10 +8,27 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Program {
+    private Hashing file;
+    private Pacient dataInitial;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public Program() {
+        this.dataInitial = new Pacient("", "", "", LocalDate.now(), -5);
     }
+
+    public void createNewStatFile(String fileName, int blockFactor, int countData) {
+        this.file = new Hashing(fileName, blockFactor, countData, this.dataInitial);
+    }
+    public void createOldStatFile(String fileName, String confFileName) {
+        this.file = new Hashing(fileName, confFileName, this.dataInitial);
+    }
+    public void createNewDynFile(String fileName, int blockFactor) {
+        this.file = new DynamicHashing(fileName, blockFactor, dataInitial);
+    }
+    public void createOldDynFile(String fileName, String treeFileName, String freeBlocksFileName, String confFileName) {
+        this.file = new DynamicHashing(fileName, treeFileName, freeBlocksFileName, confFileName, dataInitial);
+    }
+
     public ArrayList<String> fillDatabase(String nemNum, String pacNum, String hospNum) {
         ArrayList<String> logs = new ArrayList<>();
         try {

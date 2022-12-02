@@ -25,7 +25,8 @@ public class GUI extends JFrame{
     private JTextField treeFileName;
     private JTextField freeBlocksFileName;
     private JTextField confFileName;
-    private JTextField blockFactory;
+    private JTextField blockFactor;
+    private JTextField dataCount;
 
     private JTextField poistovna;
     private JFormattedTextField d_narodenia;
@@ -349,6 +350,7 @@ public class GUI extends JFrame{
         file_panel = new JPanel();
         file_panel.setLayout(null);
 
+        // OLD Static
         JLabel label_file = new JLabel("File name: ");
         label_file.setBounds(10, 20,120, 25);
         file_panel.add(label_file);
@@ -357,6 +359,93 @@ public class GUI extends JFrame{
         fileName.setBounds(150,20,165,25);
         file_panel.add(fileName);
 
+        JLabel label_conf = new JLabel("Configurations file name: ");
+        label_conf.setBounds(10, 70,120, 25);
+        file_panel.add(label_conf);
+
+        confFileName = new JTextField(30);
+        confFileName.setBounds(150,70,165,25);
+        file_panel.add(confFileName);
+
+
+        // OLD Dynamic
+        JLabel label_file2 = new JLabel("File name: ");
+        label_file2.setBounds(550, 20,120, 25);
+        file_panel.add(label_file2);
+
+        fileName = new JTextField(30);
+        fileName.setBounds(700,20,165,25);
+        file_panel.add(fileName);
+
+        JLabel label_conf2 = new JLabel("Configurations file name: ");
+        label_conf2.setBounds(550, 70,120, 25);
+        file_panel.add(label_conf2);
+
+        confFileName = new JTextField(30);
+        confFileName.setBounds(700,70,165,25);
+        file_panel.add(confFileName);
+
+        JLabel label_treeFile = new JLabel("Tree file name: ");
+        label_treeFile.setBounds(550, 120,120, 25);
+        file_panel.add(label_treeFile);
+
+        treeFileName = new JTextField(30);
+        treeFileName.setBounds(700,120,165,25);
+        file_panel.add(treeFileName);
+
+        JLabel label_freeBlocks = new JLabel("Free blocks file name: ");
+        label_freeBlocks.setBounds(550, 170,120, 25);
+        file_panel.add(label_freeBlocks);
+
+        freeBlocksFileName = new JTextField(30);
+        freeBlocksFileName.setBounds(700,170,165,25);
+        file_panel.add(freeBlocksFileName);
+
+        // NEW Static
+        JLabel label_file3 = new JLabel("File name: ");
+        label_file3.setBounds(10, 300,120, 25);
+        file_panel.add(label_file3);
+
+        fileName = new JTextField(30);
+        fileName.setBounds(150,300,165,25);
+        file_panel.add(fileName);
+
+        JLabel label_block_factory = new JLabel("Block factory: ");
+        label_block_factory.setBounds(10, 350,120, 25);
+        file_panel.add(label_block_factory);
+
+        blockFactor = new JTextField(30);
+        blockFactor.setBounds(150,350,165,25);
+        file_panel.add(blockFactor);
+
+        JLabel label_data_count = new JLabel("Data count: ");
+        label_data_count.setBounds(10, 400,120, 25);
+        file_panel.add(label_data_count);
+
+        dataCount = new JTextField(30);
+        dataCount.setBounds(150,400,165,25);
+        file_panel.add(dataCount);
+
+
+
+        // NEW Dynamic
+        JLabel label_file4 = new JLabel("File name: ");
+        label_file4.setBounds(550, 300,120, 25);
+        file_panel.add(label_file4);
+
+        fileName = new JTextField(30);
+        fileName.setBounds(700,300,165,25);
+        file_panel.add(fileName);
+
+        JLabel label_block_factory2 = new JLabel("Block factory: ");
+        label_block_factory2.setBounds(550, 350,120, 25);
+        file_panel.add(label_block_factory2);
+
+        blockFactor = new JTextField(30);
+        blockFactor.setBounds(700,350,165,25);
+        file_panel.add(blockFactor);
+
+        /*
         JLabel label_treeFile = new JLabel("Tree file name: ");
         label_treeFile.setBounds(10, 70,120, 25);
         file_panel.add(label_treeFile);
@@ -388,17 +477,17 @@ public class GUI extends JFrame{
         blockFactory = new JTextField(30);
         blockFactory.setBounds(150,220,165,25);
         file_panel.add(blockFactory);
-
+        */
 
 
         b_stat_file_old = new JButton("Old Static file");
         b_stat_file_old.addActionListener(new addButtonListener());
-        b_stat_file_old.setBounds(20, 450, 400, 40);
+        b_stat_file_old.setBounds(20, 200, 400, 40);
         file_panel.add(b_stat_file_old);
 
         b_dyn_file_old = new JButton("Old Dynamic file");
         b_dyn_file_old.addActionListener(new addButtonListener());
-        b_dyn_file_old.setBounds(520, 450, 400, 40);
+        b_dyn_file_old.setBounds(520, 200, 400, 40);
         file_panel.add(b_dyn_file_old);
 
         b_stat_file_new = new JButton("New Static file");
@@ -520,24 +609,28 @@ public class GUI extends JFrame{
                 case "Old Static file":
                     staticFile = true;
                     newFile = false;
+                    mp.createOldStatFile(fileName.getText(), confFileName.getText());
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "New Static file":
                     staticFile = true;
                     newFile = true;
+                    mp.createNewStatFile(fileName.getText(), Integer.parseInt(blockFactor.getText()), Integer.parseInt(dataCount.getText()));
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "Old Dynamic file":
                     staticFile = false;
                     newFile = false;
+                    mp.createOldDynFile(fileName.getText(), treeFileName.getText(), freeBlocksFileName.getText(), confFileName.getText());
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "New Dynamic file":
                     staticFile = false;
                     newFile = true;
+                    mp.createNewDynFile(fileName.getText(), Integer.parseInt(blockFactor.getText()));
                     createMainPanel();
                     addMainPanel();
                     break;

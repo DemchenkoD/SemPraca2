@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 
 public class DynamicHashing<T extends IData> extends Hashing<T> {
     //private String fileName;
-    private String treeFileName;
+    //private String treeFileName;
     //private Strom strom;
-    private String freeBlocksFileName;
+    //private String freeBlocksFileName;
     //int blockSize;
     //int blockFactor;
     private IVrchol Root;
@@ -18,23 +18,40 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
     public ArrayList<Long> freeAdresses; //TODO change to private
     //private T dataInitial;
 
-    public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, int paBlockFactor, T paDataInitial) {
+    public DynamicHashing(String paFileName, int paBlockFactor, T paDataInitial) {
         super(paFileName, paBlockFactor, paDataInitial);
-        //this.fileName = paFileName;
-        blockFactor = paBlockFactor;
-        this.treeFileName = paTreeFileName; //TODO add read strom from file
-        this.freeBlocksFileName = paFreeBlocksFileName;
-        freeAdresses = new ArrayList<>();
-        //dataInitial = paDataInitial;
+        //blockFactor = paBlockFactor;
         Root = new ExternyVrchol(null, -1);
+        freeAdresses = new ArrayList<>();
 
-        //try {
-        //    this.file = new RandomAccessFile(paFileName, "rw");
-            // file.write(b.ToByteArray());
-        //} catch (IOException e) {
-        //    Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
-        //}
+    }
+    public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, String paConfFileNem, T paDataInitial) {
+        super(paFileName, 0, paDataInitial);
+        this.blockFactor = readBlockFactor(paConfFileNem);
+        readTreeFromFile(paTreeFileName);
+        readFreeBlocksFromFile(paFreeBlocksFileName);
 
+    }
+    private int readBlockFactor(String paConfFileName) {
+        int blockFactor = -1;
+        try {
+            Scanner sc = new Scanner(new File(paConfFileName));
+            sc.useDelimiter(";");
+            blockFactor = sc.nextInt();
+            sc.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return blockFactor;
+    }
+    public void writeConfToFile(String nazovSuboru) {
+        try {
+            FileWriter writer = new FileWriter(nazovSuboru);
+            writer.write(this.blockFactor + ";");
+            writer.close();
+        } catch (IOException e) {
+
+        }
     }
 
     public void vypis() {
@@ -56,7 +73,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 counter++;
                 //if (address > file.length())
                 //    break;
-                System.out.println("LENGTH : "+file.length());
+                System.out.println("LENGTH : " + file.length());
             } catch (EOFException e) {
                 System.out.println("EOF");
                 break;
@@ -417,6 +434,20 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
 
     }
 
+    public void writeFreeBlocksToFile(String nazovSuboru) {
+        try {
+            FileWriter writer = new FileWriter(nazovSuboru);
+
+            for (Long adresa : freeAdresses)
+                writer.write(adresa + ";");
+
+            writer.close();
+        } catch (IOException e) {
+
+        }
+    }
+
+
     public void writeTreeToFile(String nazovSuboru) {
         try {
             FileWriter writer = new FileWriter(nazovSuboru);
@@ -430,75 +461,91 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         }
     }
 
-    public void readTreeFromFile(String nazovSuboru) {
-        Root = null;
+    public void readFreeBlocksFromFile(String nazovSuboru) {
+        freeAdresses.clear();
         try {
-            File file = new File(nazovSuboru);
-            Scanner reader = new Scanner(file);
-            while (reader.hasNextLine()) {
-                String data = reader.nextLine();
-                String parts[] = data.split(";");
-                if (parts[0].equals("null")) {// that's Root and it's ExtVrchol
-                    Root = new ExternyVrchol(null, Long.parseLong(parts[1]));
-                    return;
-                }
-                IVrchol tmp = Root;
+            Scanner sc = new Scanner(new File(nazovSuboru));
+            sc.useDelimiter(";");
+            while (sc.hasNext())
+            {
+                freeAdresses.add(sc.nextLong());
+            }
+            sc.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
-                for (int i = 0; i < parts[0].length(); i++) { //create IntVrchol for every bit in adress
-                    if (i == 0 && !(Root instanceof InternyVrchol)) { //Root has to be created
-                        Root = new InternyVrchol(null, 0);
-                        tmp = Root;
-                        ((InternyVrchol) tmp).setLavy(new ExternyVrchol((InternyVrchol) tmp, -1));
-                        ((InternyVrchol) tmp).setPravy(new ExternyVrchol((InternyVrchol) tmp, -1));
+        public void readTreeFromFile (String nazovSuboru){
+            Root = null;
+            try {
+                File file = new File(nazovSuboru);
+                Scanner reader = new Scanner(file);
+                while (reader.hasNextLine()) {
+                    String data = reader.nextLine();
+                    String parts[] = data.split(";");
+                    if (parts[0].equals("null")) {// that's Root and it's ExtVrchol
+                        Root = new ExternyVrchol(null, Long.parseLong(parts[1]));
+                        return;
                     }
-                    if (tmp instanceof ExternyVrchol) {
-                        transform((ExternyVrchol) tmp); //TODO change
-                        tmp = tmp.getParent();
-                        i = i - 2;
-                        continue;
+                    IVrchol tmp = Root;
+
+
+                    for (int i = 0; i < parts[0].length(); i++) { //create IntVrchol for every bit in adress
+                        if (i == 0 && !(Root instanceof InternyVrchol)) { //Root has to be created
+                            Root = new InternyVrchol(null, 0);
+                            tmp = Root;
+                            ((InternyVrchol) tmp).setLavy(new ExternyVrchol((InternyVrchol) tmp, -1));
+                            ((InternyVrchol) tmp).setPravy(new ExternyVrchol((InternyVrchol) tmp, -1));
+                        }
+                        if (tmp instanceof ExternyVrchol) {
+                            transform((ExternyVrchol) tmp); //TODO change
+                            tmp = tmp.getParent();
+                            i = i - 2;
+                            continue;
+                        }
+                        if (parts[0].charAt(i) == '0')
+                            tmp = ((InternyVrchol) tmp).getLavy();
+                        else if (parts[0].charAt(i) == '1')
+                            tmp = ((InternyVrchol) tmp).getPravy();
+
                     }
-                    if (parts[0].charAt(i) == '0')
-                        tmp = ((InternyVrchol) tmp).getLavy();
-                    else if (parts[0].charAt(i) == '1')
-                        tmp = ((InternyVrchol) tmp).getPravy();
+                    ExternyVrchol extVrchol = new ExternyVrchol(tmp.getParent(), Long.parseLong(parts[1]));
+                    tmp.getParent().setSon(tmp, extVrchol);
 
                 }
-                ExternyVrchol extVrchol = new ExternyVrchol(tmp.getParent(), Long.parseLong(parts[1]));
-                tmp.getParent().setSon(tmp, extVrchol);
+                reader.close();
+            } catch (IOException e) {
 
             }
-            reader.close();
-        } catch (IOException e) {
-
         }
+
+        private long getFreeAdresa () {
+            if (freeAdresses.size() != 0) {
+                long address = freeAdresses.get(0);
+                freeAdresses.remove(0);
+                return address;
+            }
+            try {
+                return file.length();
+            } catch (IOException e) {
+                System.out.println("Error getFreeAdresa()");
+                return -1;
+            }
+        }
+
+        private boolean createBlock ( long paAdresa){
+            Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
+            try {
+                file.seek(paAdresa);
+                file.write(b.ToByteArray());
+                return true;
+            } catch (IOException e) {
+                Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
+                return false;
+            }
+        }
+
+
     }
-
-    private long getFreeAdresa() {
-        if (freeAdresses.size() != 0) {
-            long address = freeAdresses.get(0);
-            freeAdresses.remove(0);
-            return address;
-        }
-        try {
-            return file.length();
-        } catch (IOException e) {
-            System.out.println("Error getFreeAdresa()");
-            return -1;
-        }
-    }
-
-    private boolean createBlock(long paAdresa) {
-        Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
-        try {
-            file.seek(paAdresa);
-            file.write(b.ToByteArray());
-            return true;
-        } catch (IOException e) {
-            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, e);
-            return false;
-        }
-    }
-
-
-}
