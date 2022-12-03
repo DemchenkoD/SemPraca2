@@ -23,9 +23,7 @@ public class Pacient implements IData<Pacient> {
     private int poistovna;
     private ArrayList<Hospitalizacia> hospitalizacie;
     private ArrayList<Integer> idHospitalizacie;
-    public Pacient() {
-
-    }
+    public Pacient() {  }
     public Pacient(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, int pZdr_poistovna) {
         meno = pMeno;
         priezvisko = pPriezvisko;
@@ -39,8 +37,6 @@ public class Pacient implements IData<Pacient> {
 
         menoLength = meno.length();
         priezviskoLength = priezvisko.length();
-
-        //this.FromByteArray(this.ToByteArray());
     }
     public String getMeno() {
         return meno;
@@ -72,6 +68,9 @@ public class Pacient implements IData<Pacient> {
 
     public void setD_narodenia(LocalDate d_narodenia) {
         this.d_narodenia = d_narodenia;
+    }
+    public int getHospitalizacieCount() {
+        return idHospitalizacie.size();
     }
 
     public boolean addHospitalizacia(LocalDateTime pD_zaciatku, LocalDateTime pD_konca, String pDiagnoza ) {
@@ -142,36 +141,16 @@ public class Pacient implements IData<Pacient> {
         return hospitalizacie;
     }
 
-    /*
-        public Hospitalizacia getHospitalizacia(String pNazovNemocnice) {
-            for (Hospitalizacia tmp : hospitalizacie){
-                if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo))
-                    return tmp;
-            }
-            return null;
-        }
-        public LocalDateTime ukoncitHospitalizaciu(String pNazovNemocnice, LocalDateTime pKonca) { // return zaciatok hospitalizacie
-
-            for (Hospitalizacia tmp : hospitalizacie){
-                if (tmp.getNazovNemocnice().equals(pNazovNemocnice) && tmp.getRodCisloPacienta().equals(this.rod_cislo) && tmp.getD_konca() == null) {
-                    tmp.setD_konca(pKonca);
-                    return tmp.getD_zaciatku();
-                }
-            }
-            return null;
-        }
-
-     */
     public String toString() {
         return (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna);
     }
     public String toStringFull() {
         String result =  (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna + '\n');
         for (int i = 0; i < idHospitalizacie.size(); i ++) {
-            result += hospitalizacie.get(i).toString(); //TODO remove
+            result += '\t' + hospitalizacie.get(i).toString(); //TODO remove
         }
         if (idHospitalizacie.size() == 0)
-            result += "Patient has no hospitalizations";
+            result += "Pacient nema ziadne hospitalizacie\n";
         return result;
     }
 
@@ -186,7 +165,7 @@ public class Pacient implements IData<Pacient> {
     @Override
     public int getSize() {
         return Character.BYTES * (maxLengthMeno + maxLengthPriezvisko + maxLengtRodCislo + 10) +
-                4*Integer.BYTES + maxLengtHospitalizacie*((new Hospitalizacia(0, null, null, null)).getSize()); //TODO addHospitalizacie size
+                4*Integer.BYTES + maxLengtHospitalizacie*((new Hospitalizacia(0, null, null, null)).getSize());
 
     }
     @Override

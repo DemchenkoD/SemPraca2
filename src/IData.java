@@ -7,6 +7,7 @@ public interface IData<T> extends IRecord<T> {
     public T createClass();
 
     public void print();
+    public String toStringFull();
 }
 
 

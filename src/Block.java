@@ -68,15 +68,18 @@ public class Block<T extends IData> implements IRecord {
         return false;
     }
     public void vypis() {
-        System.out.println("________________________NEW BLOCK_______________SIZE =" + ValidCount);
+        System.out.println(toString());
+    }
+    public String toString() {
+        String result = ("________________________NEW BLOCK_______________SIZE =" + ValidCount + '\n');
         if(ValidCount == 0) {
-            System.out.println("Empty block on address ");
+            result += "Empty block on address " + '\n';
         } else {
-
             for(int i = 0; i < ValidCount; i++){
-                records.get(i).print();
+                result += records.get(i).toStringFull();
             }
         }
+        return result;
     }
 
 

@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Scanner;
@@ -42,7 +43,6 @@ public class Hashing<T extends IData> {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
     public Hashing(String paFileName, String confFileName, T pDataInitial) {
         this.dataInitial = pDataInitial;
@@ -67,9 +67,9 @@ public class Hashing<T extends IData> {
         }
     }
 
-    public void writeConfToFile(String nazovSuboru) {
+    public void writeConfToFile() {
         try {
-            FileWriter writer = new FileWriter(nazovSuboru);
+            FileWriter writer = new FileWriter("conf.txt");
             writer.write(this.numbOfBlocks + ";");
             writer.write(this.blockFactor + ";");
             writer.close();
@@ -199,6 +199,33 @@ public class Hashing<T extends IData> {
         } catch (IOException ex) {
             Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public ArrayList<String> vypis() {
+        ArrayList<String> result = new ArrayList<>();
+        Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
+        byte[] blockBytes = new byte[b.getSize()];
+        long counter = 0;
+        while (true) {
+            try {
+                long address = counter * b.getSize();
+
+                if (address >= file.length())
+                    break;
+                result.add("_______________________SEEK_____" + address + "___________");
+                file.seek(address);
+                file.read(blockBytes);
+                b.FromByteArray(blockBytes);
+                result.add(b.toString());
+                counter++;
+            } catch (EOFException e) {
+                //System.out.println("EOF");
+                break;
+            } catch (IOException e) {
+                //System.out.println("Error");
+            }
+        }
+        return result;
+
     }
 
     public long getAddress(BitSet key) {

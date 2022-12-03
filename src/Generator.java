@@ -37,14 +37,15 @@ public class Generator {
         generateHospitalizacie(numHospitalizacie);
     }
     public void generateHospitalizacie(int pocet) {
-/*
+
         Random r = new Random();
-        if (pacienti.size() == 0 || nemocnice.size() == 0)
+        if (pacienti.size() == 0)
             return;
         for (int i = 0; i < pocet; i ++) {
-
-            Pacient pacient = pacienti.get(r.nextInt(pacienti.size()));
-            Nemocnica nemocnica = nemocnice.get(r.nextInt(nemocnice.size()));
+            Pacient pacient;
+            do {
+                pacient = pacienti.get(r.nextInt(pacienti.size()));
+            } while (pacient.getHospitalizacieCount() >=10);
 
             LocalDateTime from = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
             from = from.plusSeconds(ThreadLocalRandom.current().nextLong(10000));
@@ -56,13 +57,10 @@ public class Generator {
             LocalDateTime datumKoniec = datumZaciatku.plusDays(daysHospitalized);
 
             String diagnoza = genString(10);
-            hospitalizacie.add(new Hospitalizacia(nemocnica.getNazov(), pacient.getRod_cislo(), datumZaciatku, datumKoniec, diagnoza, pacient.getZdr_poistovna()));
-            pacient.addHospitalizacia(nemocnica.getNazov(), datumZaciatku, datumKoniec, diagnoza);
-
-            nemocnica.addHospitalizacia(pacient, datumZaciatku, datumKoniec, diagnoza);
+            pacient.addHospitalizacia( datumZaciatku, datumKoniec, diagnoza);
 
         }
-        */
+
 
     }
     public void generatePacient(int pocet) {
@@ -85,13 +83,7 @@ public class Generator {
             pacienti.add(new Pacient(meno, priezvisko, rod_cislo, d_narodenia, zdr_poistovna));
         }
     }
-    /*
-    public void generateNemocnice(int pocet) {
-        for (int i = 0; i < pocet; i ++) {
-            nemocnice.add(new Nemocnica(genString(15)));
-        }
-    }
-    */
+
     public String genString(int length) {
 
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvxyz";
@@ -130,25 +122,9 @@ public class Generator {
         return (gc.get(gc.DAY_OF_MONTH) + "." + (gc.get(gc.MONTH) + 1) + "." + gc.get(gc.YEAR));
 
     }
-    public ArrayList<Pacient> genPatientsForFile(int num) {
-        generatePacient(num);
-        ArrayList<Pacient> pacienti = getPacienti();
-        for (Pacient p: pacienti) {
-            for(int i = 0; i < 10; i++){
-                LocalDateTime from = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
-                from = from.plusSeconds(ThreadLocalRandom.current().nextLong(10000));
-                LocalDateTime to = LocalDateTime.of(2020, 1, 1, 1, 1, 1);
-                long days = from.until(to, ChronoUnit.DAYS);
-                long randomDays = ThreadLocalRandom.current().nextLong(days + 1);
-                LocalDateTime datumZaciatku = from.plusDays(randomDays);
-                long daysHospitalized = ThreadLocalRandom.current().nextLong(150 + 1);
-                LocalDateTime datumKoniec = datumZaciatku.plusDays(daysHospitalized);
-
-                String diagnoza = genString(10);
-                p.addHospitalizacia(datumZaciatku, datumKoniec,diagnoza);
-
-            }
-        }
+    public ArrayList<Pacient> genPatientsForFile(int numPacienti, int numHosp) {
+        generatePacient(numPacienti);
+        generateHospitalizacie(numHosp);
         return pacienti;
 
     }

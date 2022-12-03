@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class GUI extends JFrame{
-    private JPanel file_panel, mainPanel,panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel_gen;
-    private JButton b_stat_file_new, b_stat_file_old,  b_dyn_file_old, b_dyn_file_new,  b1, b2, b3, b4, b5, b6, b7, b_gen;
-    private JButton b1_confirm, b2_confirm, b3_confirm, b4_confirm,b5_confirm, b6_confirm,b7_confirm, b_gen_confirm;
+    private JPanel file_panel, mainPanel,panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel_gen, panel_vypis, panel_genConf;
+    private JButton b_stat_file_new, b_stat_file_old,  b_dyn_file_old, b_dyn_file_new,  b1, b2, b3, b4, b5, b6, b7, b_gen, b_vypis, b_genConf;
+    private JButton b1_confirm, b2_confirm, b3_confirm, b4_confirm,b5_confirm, b6_confirm,b7_confirm, b_gen_confirm, b_vypis_conf, b_genConf_confirm;
     private JButton b_main;
     private Program mp = new Program();
     private JTextField nemocnice_num;
@@ -317,28 +317,20 @@ public class GUI extends JFrame{
         panel_gen = new JPanel();
         panel_gen.setLayout(null);
 
-        JLabel label_nem = new JLabel("Pocet Nemocnic");
-        label_nem.setBounds(10, 20,120, 25);
-        panel_gen.add(label_nem );
-
-        nemocnice_num = new JTextField(15);
-        nemocnice_num.setBounds(150,20,165,25);
-        panel_gen.add(nemocnice_num);
-
         JLabel label_pac = new JLabel("Pocet Pacientov");
-        label_pac.setBounds(10, 70,120, 25);
+        label_pac.setBounds(10, 20,120, 25);
         panel_gen.add(label_pac);
 
         pacienti_num = new JTextField(15);
-        pacienti_num.setBounds(150,70,165,25);
+        pacienti_num.setBounds(150,20,165,25);
         panel_gen.add(pacienti_num);
 
         JLabel label_hosp = new JLabel("Pocet Hospitalizacii");
-        label_hosp.setBounds(10, 120,120, 25);
+        label_hosp.setBounds(10, 70,120, 25);
         panel_gen.add(label_hosp);
 
         hospitalizacie_num = new JTextField(15);
-        hospitalizacie_num.setBounds(150,120,165,25);
+        hospitalizacie_num.setBounds(150,70,165,25);
         panel_gen.add(hospitalizacie_num);
 
         label_logs = new JTextArea();
@@ -449,41 +441,6 @@ public class GUI extends JFrame{
         blockFactor_NewD.setBounds(700,350,165,25);
         file_panel.add(blockFactor_NewD);
 
-        /*
-        JLabel label_treeFile = new JLabel("Tree file name: ");
-        label_treeFile.setBounds(10, 70,120, 25);
-        file_panel.add(label_treeFile);
-
-        treeFileName = new JTextField(30);
-        treeFileName.setBounds(150,70,165,25);
-        file_panel.add(treeFileName);
-
-        JLabel label_freeBlocks = new JLabel("Free blocks file name: ");
-        label_freeBlocks.setBounds(10, 120,120, 25);
-        file_panel.add(label_freeBlocks);
-
-        freeBlocksFileName = new JTextField(30);
-        freeBlocksFileName.setBounds(150,120,165,25);
-        file_panel.add(freeBlocksFileName);
-
-        JLabel label_conf = new JLabel("Configurations file name: ");
-        label_conf.setBounds(10, 170,120, 25);
-        file_panel.add(label_conf);
-
-        confFileName = new JTextField(30);
-        confFileName.setBounds(150,170,165,25);
-        file_panel.add(confFileName);
-
-        JLabel label_block_factory = new JLabel("Block factory: ");
-        label_block_factory.setBounds(10, 220,120, 25);
-        file_panel.add(label_block_factory);
-
-        blockFactory = new JTextField(30);
-        blockFactory.setBounds(150,220,165,25);
-        file_panel.add(blockFactory);
-        */
-
-
         b_stat_file_old = new JButton("Old Static file");
         b_stat_file_old.addActionListener(new addButtonListener());
         b_stat_file_old.setBounds(20, 200, 400, 40);
@@ -505,6 +462,42 @@ public class GUI extends JFrame{
         file_panel.add(b_dyn_file_new);
 
         add(file_panel);
+
+    }
+    private void createPanelVypis() {
+        panel_vypis = new JPanel();
+        panel_vypis.setLayout(null);
+
+        label_logs = new JTextArea();
+        label_logs.setBounds(400, 20,800, 700);
+        label_logs.setEditable(false);
+        JScrollPane scroll = new JScrollPane(label_logs,   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scroll.setBounds(400, 20,800, 700);
+        scroll.setPreferredSize(new Dimension(300, 50));
+
+        label_logs.setLineWrap(true);
+        panel_vypis.add(label_logs);
+
+        panel_vypis.add(scroll);
+        scroll.setViewportView(label_logs);
+
+
+        panel_vypis.add(b_main);
+        panel_vypis.add(b_vypis_conf);
+
+    }
+    private void createPanelGenConf() {
+        panel_genConf = new JPanel();
+        panel_genConf.setLayout(null);
+
+        label_logs = new JTextArea();
+        label_logs.setBounds(35, 330,300, 50);
+        label_logs.setEditable(false);
+        panel_genConf.add(label_logs);
+
+
+        panel_genConf.add(b_main);
+        panel_genConf.add(b_genConf_confirm);
 
     }
     private void createMainPanel() {
@@ -583,6 +576,21 @@ public class GUI extends JFrame{
         b_gen_confirm = new JButton("B_GEN_CONFIRM");
         b_gen_confirm.addActionListener(new addButtonListener());
         b_gen_confirm.setBounds(200, 400, 120, 30);
+        counter=1;
+
+        b_vypis = new JButton("Vypis celeho suboru");
+        b_vypis.addActionListener(new addButtonListener());
+        b_vypis.setBounds(500, counter *50, 400, 40);
+        b_vypis_conf = new JButton("B_VYPIS");
+        b_vypis_conf.addActionListener(new addButtonListener());
+        b_vypis_conf.setBounds(200, 400, 120, 30);
+        counter++;
+        b_genConf = new JButton("Vegenerovat konfiguracny subor");
+        b_genConf.addActionListener(new addButtonListener());
+        b_genConf.setBounds(500, counter *50, 400, 40);
+        b_genConf_confirm = new JButton("B_GENCONF_CONFIRM");
+        b_genConf_confirm.addActionListener(new addButtonListener());
+        b_genConf_confirm.setBounds(200, 400, 120, 30);
     }
 
     private void addMainPanel() {
@@ -593,6 +601,8 @@ public class GUI extends JFrame{
         mainPanel.add(b5);
         mainPanel.add(b6);
         mainPanel.add(b7);
+        mainPanel.add(b_vypis);
+        mainPanel.add(b_genConf);
         mainPanel.add(b_gen);
 
         add(mainPanel);
@@ -638,7 +648,14 @@ public class GUI extends JFrame{
                     createMainPanel();
                     addMainPanel();
                     break;
-
+                case "Vypis celeho suboru":
+                    createPanelVypis();
+                    getContentPane().add(panel_vypis);
+                    break;
+                case "Vegenerovat konfiguracny subor":
+                    createPanelGenConf();
+                    getContentPane().add(panel_genConf);
+                    break;
                 case "#1 Vyhladanie zaznamov pacienta":
                     createPanel1();
                     getContentPane().add(panel1);
@@ -673,6 +690,20 @@ public class GUI extends JFrame{
                     break;
                 case "Main screen":
                     getContentPane().add(mainPanel);
+                    break;
+                case "B_VYPIS":
+                    arr_logs = mp.vypis();
+                    str_logs = processLogs(arr_logs);
+                    createPanelVypis();
+                    label_logs.setText(str_logs);
+                    getContentPane().add(panel_vypis);
+                    break;
+                case "B_GENCONF_CONFIRM":
+                    arr_logs = mp.genConf();
+                    str_logs = processLogs(arr_logs);
+                    createPanelGenConf();
+                    label_logs.setText(str_logs);
+                    getContentPane().add(panel_genConf);
                     break;
                 case "B1_CONFIRM":
                     arr_logs = mp.task1(rod_cislo.getText());
@@ -726,8 +757,8 @@ public class GUI extends JFrame{
                     break;
 
                 case "B_GEN_CONFIRM":
-                    //arr_logs = mp.fillDatabase(nemocnice_num.getText(), pacienti_num.getText(), hospitalizacie_num.getText());
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.fillDatabase(Integer.parseInt(pacienti_num.getText()), Integer.parseInt(hospitalizacie_num.getText()));
+                    str_logs = processLogs(arr_logs);
                     createPanel_Gen();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel_gen);

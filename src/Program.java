@@ -29,17 +29,17 @@ public class Program {
         this.file = new DynamicHashing(fileName, treeFileName, freeBlocksFileName, confFileName, dataInitial);
     }
 
-    public ArrayList<String> fillDatabase(String nemNum, String pacNum, String hospNum) {
+    public ArrayList<String> fillDatabase(int pacNum, int hospNum) {
         ArrayList<String> logs = new ArrayList<>();
         try {
             Generator g = new Generator();
-            int nemocnici_num = Integer.parseInt(nemNum);
-            int pacienti_num = Integer.parseInt(pacNum);
-            int hositalizacie_num = Integer.parseInt(hospNum);
-            g.generate(nemocnici_num, pacienti_num, hositalizacie_num);
-            //nemocnice.multipleInsert(g.getNemocnice());
-            //pacienti.multipleInsert(g.getPacienti());
-            logs.add("Data boli uspesne vygenerovane");
+            ArrayList<Pacient> genData = g.genPatientsForFile(pacNum, hospNum);
+            int count = 0;
+            for(int i = 0; i < genData.size(); i++) {
+                if(file.Insert(genData.get(i)))
+                    count++;
+            }
+            logs.add(count + " dat bolo uspesne vygenerovano");
         } catch (Exception e) {
             logs.add(e.getMessage());
         }
@@ -98,10 +98,10 @@ public class Program {
     }
     public ArrayList<String> task5(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, int pZdr_poistovna) {
         ArrayList<String> logs = new ArrayList<>();
-        if (file.Insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
-                logs.add("Pacient bol uspesne pridany");
-            else
-                logs.add("Chyba");
+        if (pZdr_poistovna > 0 && pZdr_poistovna <= 255 && file.Insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
+            logs.add("Pacient bol uspesne pridany");
+        else
+            logs.add("Chyba");
         return logs;
     }
     public ArrayList<String> task6(String pRodCislo, int pId) {
@@ -126,6 +126,16 @@ public class Program {
             logs.add("Error");
         //logs.addAll(n.vytvorit_doklady(pMesiac));
 
+        return logs;
+    }
+
+    public ArrayList<String> vypis() {
+        return file.vypis();
+    }
+    public ArrayList<String> genConf() {
+        ArrayList<String> logs = new ArrayList<>();
+        file.writeConfToFile();
+        logs.add("Konfiguracie boli ulozene");
         return logs;
     }
 

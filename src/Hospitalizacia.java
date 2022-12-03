@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.BitSet;
 
-public class Hospitalizacia implements IData<Hospitalizacia>{
+public class Hospitalizacia implements IRecord<Hospitalizacia>{
     private final String format = "yyyy-MM-dd HH:mm:ss";
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
     private final int maxLengthDiagnoza = 20;
@@ -66,22 +66,6 @@ public class Hospitalizacia implements IData<Hospitalizacia>{
         this.diagnoza = diagnoza;
     }
 
-    @Override
-    public BitSet getHash() {
-        return null; //TODO change
-    }
-
-    @Override
-    public boolean myEquals(Hospitalizacia data) {
-        return false; //TODO change
-    }
-
-    @Override
-    public Hospitalizacia createClass() {
-        return null; //TODO change
-    }
-
-    @Override
     public void print() {
         if (d_konca != null)
             System.out.println("H\t" + d_zaciatku.format(formatter) + '\t' + d_konca.format(formatter) + '\t' + diagnoza +'\n');

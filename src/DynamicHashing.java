@@ -28,6 +28,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
 
     public DynamicHashing(String paFileName, String paTreeFileName, String paFreeBlocksFileName, String paConfFileNem, T paDataInitial) {
         super(paFileName, 0, paDataInitial);
+        freeAdresses = new ArrayList<>();
         this.blockFactor = readBlockFactor(paConfFileNem);
         readTreeFromFile(paTreeFileName);
         readFreeBlocksFromFile(paFreeBlocksFileName);
@@ -47,46 +48,18 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
         return blockFactor;
     }
 
-    public void writeConfToFile(String nazovSuboru) {
+    public void writeConfToFile() {
         try {
-            FileWriter writer = new FileWriter(nazovSuboru);
+            FileWriter writer = new FileWriter("conf.txt");
             writer.write(this.blockFactor + ";");
             writer.close();
         } catch (IOException e) {
 
         }
+        writeTreeToFile("tree.txt");
+        writeFreeBlocksToFile("freeBlocks.txt");
     }
 
-    public void vypis() {
-        Block<T> b = new Block<>(blockFactor, dataInitial.getClass());
-        byte[] blockBytes = new byte[b.getSize()];
-        long counter = 0;
-        System.out.println();
-        while (true) {
-            try {
-                long address = (counter + 1) * b.getSize();
-
-                if (address >= file.length())
-                    break;
-                System.out.println("_______________________SEEK_____" + address + "___________");
-                file.seek(address);
-                file.read(blockBytes);
-                b.FromByteArray(blockBytes);
-                b.vypis();
-                counter++;
-                //if (address > file.length())
-                //    break;
-                System.out.println("LENGTH : " + file.length());
-            } catch (EOFException e) {
-                System.out.println("EOF");
-                break;
-            } catch (IOException e) {
-                System.out.println("Error");
-            }
-        }
-
-        System.out.println();
-    }
 
     public boolean Insert(T data) {
         BitSet hash = data.getHash();
@@ -372,7 +345,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
             int leftInserted = 0;
             int rightInserted = 0;
             BitSet b = null;
-            for (T data : allData) { //TODO add functionality in case allData is empty
+            for (T data : allData) {
                 b = data.getHash();
                 if (r.goRight(b))
                     rightInserted++;
