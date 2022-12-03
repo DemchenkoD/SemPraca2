@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ public class GUI extends JFrame{
     private JTextField rod_cislo;
     private JTextField meno;
     private JTextField priezvisko;
-    private JTextField fileName;
+    private JTextField fileName_OldS, fileName_OldD, fileName_NewS, fileName_NewD;
     private JTextField treeFileName;
     private JTextField freeBlocksFileName;
-    private JTextField confFileName;
-    private JTextField blockFactor;
+    private JTextField confFileName_OldS, confFileName_OldD;
+    private JTextField blockFactor_NewS, blockFactor_NewD;
     private JTextField dataCount;
-
+    private JTextField id;
     private JTextField poistovna;
     private JFormattedTextField d_narodenia;
     private JFormattedTextField d_hosp;
@@ -67,17 +68,8 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(100,20,165,25);
+        rod_cislo.setText("0712019165"); //todo remove
         panel1.add(rod_cislo);
-
-        /*
-        JLabel label_nem = new JLabel("Nemocnica");
-        label_nem.setBounds(10, 70,80, 25);
-        panel1.add(label_nem );
-
-        nemocnica = new JTextField(15);
-        nemocnica.setBounds(100,70,165,25);
-        panel1.add(nemocnica);
-        */
 
         label_logs = new JTextArea();
         label_logs.setBounds(400, 20,800, 700);
@@ -106,9 +98,16 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(100,20,165,25);
+        rod_cislo.setText("0712019165"); //todo remove
         panel2.add(rod_cislo);
 
-        //TODO : add import hospitalizacieId
+        JLabel label_id = new JLabel("ID :");
+        label_id.setBounds(10, 70,80, 25);
+        panel2.add(label_id);
+
+        id = new JTextField(10);
+        id.setBounds(100,70,165,25);
+        panel2.add(id);
 
         label_logs = new JTextArea();
         label_logs.setBounds(400, 20,800, 700);
@@ -137,32 +136,26 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
+        rod_cislo.setText("0712019165"); //todo remove
         panel3.add(rod_cislo);
-        /*
-        JLabel label_nem = new JLabel("Nemocnica");
-        label_nem.setBounds(10, 70,130, 25);
-        panel3.add(label_nem );
 
-        nemocnica = new JTextField(15);
-        nemocnica.setBounds(150,70,165,25);
-        panel3.add(nemocnica);
-        */
         JLabel label_d_hosp = new JLabel("Datum Hospitalizacie");
-        label_d_hosp.setBounds(10, 120,130, 25);
+        label_d_hosp.setBounds(10, 70,130, 25);
         panel3.add(label_d_hosp );
 
         d_hosp = new JFormattedTextField(formatter);
         LocalDateTime date = LocalDateTime.now();
         d_hosp.setText(date.format(formatter));
-        d_hosp.setBounds(150,120,165,25);
+        d_hosp.setBounds(150,70,165,25);
         panel3.add(d_hosp);
 
         JLabel label_diagnoza = new JLabel("Diagnoza");
-        label_diagnoza.setBounds(10, 170,130, 25);
+        label_diagnoza.setBounds(10, 120,130, 25);
         panel3.add(label_diagnoza);
 
         diagnoza = new JTextField(10);
-        diagnoza.setBounds(150,170,165,25);
+        diagnoza.setText("Diagnoza"); //todo remove
+        diagnoza.setBounds(150,120,165,25);
         panel3.add(diagnoza);
 
         label_logs = new JTextArea();
@@ -177,26 +170,27 @@ public class GUI extends JFrame{
     private void createPanel4() {
         panel4 = new JPanel();
         panel4.setLayout(null);
+
         JLabel label_rc = new JLabel("Rod. Cislo");
         label_rc.setBounds(10, 20,130, 25);
         panel4.add(label_rc);
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
+        rod_cislo.setText("0712019165"); //todo remove
         panel4.add(rod_cislo);
-/*
-        JLabel label_nem = new JLabel("Nemocnica");
-        label_nem.setBounds(10, 70,130, 25);
-        panel4.add(label_nem );
 
-        nemocnica = new JTextField(15);
-        nemocnica.setBounds(150,70,165,25);
-        panel4.add(nemocnica);
-*/
+        JLabel label_id = new JLabel("ID");
+        label_id.setBounds(10, 70,130, 25);
+        panel4.add(label_id);
+
+        id = new JTextField(10);
+        id.setBounds(150,70,165,25);
+        panel4.add(id);
+
         JLabel label_d_hosp = new JLabel("Koniec Hospitalizacie");
         label_d_hosp.setBounds(10, 120,130, 25);
         panel4.add(label_d_hosp );
-
 
         d_k_hosp = new JFormattedTextField(formatter);
         LocalDateTime date = LocalDateTime.now();
@@ -222,6 +216,7 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
+        rod_cislo.setText("0712019165"); //todo remove
         panel5.add(rod_cislo);
 
         JLabel label_meno = new JLabel("Meno");
@@ -230,6 +225,7 @@ public class GUI extends JFrame{
 
         meno = new JTextField(10);
         meno.setBounds(150,70,165,25);
+        meno.setText("Dima"); //todo remove
         panel5.add(meno);
 
         JLabel label_priezvisko = new JLabel("Priezvisko");
@@ -238,6 +234,7 @@ public class GUI extends JFrame{
 
         priezvisko = new JTextField(15);
         priezvisko.setBounds(150,120,165,25);
+        priezvisko.setText("Demchenko"); //todo remove
         panel5.add(priezvisko);
 
         JLabel label_d_narodenia = new JLabel("Datum Narodenia");
@@ -247,6 +244,7 @@ public class GUI extends JFrame{
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         d_narodenia = new JFormattedTextField(df);
         d_narodenia.setBounds(150,170,165,25);
+        d_narodenia.setText("07-12-2001"); //todo remove
         panel5.add(d_narodenia);
 
         JLabel label_poistovna = new JLabel("Poistovna");
@@ -277,7 +275,13 @@ public class GUI extends JFrame{
         rod_cislo.setBounds(150,20,165,25);
         panel6.add(rod_cislo);
 
-        // TODO Add input for hospId
+        JLabel label_id = new JLabel("ID");
+        label_id.setBounds(10, 70,130, 25);
+        panel6.add(label_id);
+
+        id = new JTextField(10);
+        id.setBounds(150,70,165,25);
+        panel6.add(id);
 
         label_logs = new JTextArea();
         label_logs.setBounds(35, 330,300, 50);
@@ -355,17 +359,17 @@ public class GUI extends JFrame{
         label_file.setBounds(10, 20,120, 25);
         file_panel.add(label_file);
 
-        fileName = new JTextField(30);
-        fileName.setBounds(150,20,165,25);
-        file_panel.add(fileName);
+        fileName_OldS = new JTextField(30);
+        fileName_OldS.setBounds(150,20,165,25);
+        file_panel.add(fileName_OldS);
 
         JLabel label_conf = new JLabel("Configurations file name: ");
         label_conf.setBounds(10, 70,120, 25);
         file_panel.add(label_conf);
 
-        confFileName = new JTextField(30);
-        confFileName.setBounds(150,70,165,25);
-        file_panel.add(confFileName);
+        confFileName_OldS = new JTextField(30);
+        confFileName_OldS.setBounds(150,70,165,25);
+        file_panel.add(confFileName_OldS);
 
 
         // OLD Dynamic
@@ -373,17 +377,17 @@ public class GUI extends JFrame{
         label_file2.setBounds(550, 20,120, 25);
         file_panel.add(label_file2);
 
-        fileName = new JTextField(30);
-        fileName.setBounds(700,20,165,25);
-        file_panel.add(fileName);
+        fileName_OldD = new JTextField(30);
+        fileName_OldD.setBounds(700,20,165,25);
+        file_panel.add(fileName_OldD);
 
         JLabel label_conf2 = new JLabel("Configurations file name: ");
         label_conf2.setBounds(550, 70,120, 25);
         file_panel.add(label_conf2);
 
-        confFileName = new JTextField(30);
-        confFileName.setBounds(700,70,165,25);
-        file_panel.add(confFileName);
+        confFileName_OldD = new JTextField(30);
+        confFileName_OldD.setBounds(700,70,165,25);
+        file_panel.add(confFileName_OldD);
 
         JLabel label_treeFile = new JLabel("Tree file name: ");
         label_treeFile.setBounds(550, 120,120, 25);
@@ -406,17 +410,17 @@ public class GUI extends JFrame{
         label_file3.setBounds(10, 300,120, 25);
         file_panel.add(label_file3);
 
-        fileName = new JTextField(30);
-        fileName.setBounds(150,300,165,25);
-        file_panel.add(fileName);
+        fileName_NewS = new JTextField(30);
+        fileName_NewS.setBounds(150,300,165,25);
+        file_panel.add(fileName_NewS);
 
-        JLabel label_block_factory = new JLabel("Block factory: ");
+        JLabel label_block_factory = new JLabel("Block factor: ");
         label_block_factory.setBounds(10, 350,120, 25);
         file_panel.add(label_block_factory);
 
-        blockFactor = new JTextField(30);
-        blockFactor.setBounds(150,350,165,25);
-        file_panel.add(blockFactor);
+        blockFactor_NewS = new JTextField(30);
+        blockFactor_NewS.setBounds(150,350,165,25);
+        file_panel.add(blockFactor_NewS);
 
         JLabel label_data_count = new JLabel("Data count: ");
         label_data_count.setBounds(10, 400,120, 25);
@@ -433,17 +437,17 @@ public class GUI extends JFrame{
         label_file4.setBounds(550, 300,120, 25);
         file_panel.add(label_file4);
 
-        fileName = new JTextField(30);
-        fileName.setBounds(700,300,165,25);
-        file_panel.add(fileName);
+        fileName_NewD = new JTextField(30);
+        fileName_NewD.setBounds(700,300,165,25);
+        file_panel.add(fileName_NewD);
 
-        JLabel label_block_factory2 = new JLabel("Block factory: ");
+        JLabel label_block_factory2 = new JLabel("Block factor: ");
         label_block_factory2.setBounds(550, 350,120, 25);
         file_panel.add(label_block_factory2);
 
-        blockFactor = new JTextField(30);
-        blockFactor.setBounds(700,350,165,25);
-        file_panel.add(blockFactor);
+        blockFactor_NewD = new JTextField(30);
+        blockFactor_NewD.setBounds(700,350,165,25);
+        file_panel.add(blockFactor_NewD);
 
         /*
         JLabel label_treeFile = new JLabel("Tree file name: ");
@@ -609,28 +613,28 @@ public class GUI extends JFrame{
                 case "Old Static file":
                     staticFile = true;
                     newFile = false;
-                    mp.createOldStatFile(fileName.getText(), confFileName.getText());
+                    mp.createOldStatFile(fileName_OldS.getText(), confFileName_OldS.getText());
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "New Static file":
                     staticFile = true;
                     newFile = true;
-                    mp.createNewStatFile(fileName.getText(), Integer.parseInt(blockFactor.getText()), Integer.parseInt(dataCount.getText()));
+                    mp.createNewStatFile(fileName_NewS.getText(), Integer.parseInt(blockFactor_NewS.getText()), Integer.parseInt(dataCount.getText()));
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "Old Dynamic file":
                     staticFile = false;
                     newFile = false;
-                    mp.createOldDynFile(fileName.getText(), treeFileName.getText(), freeBlocksFileName.getText(), confFileName.getText());
+                    mp.createOldDynFile(fileName_OldD.getText(), treeFileName.getText(), freeBlocksFileName.getText(), confFileName_OldD.getText());
                     createMainPanel();
                     addMainPanel();
                     break;
                 case "New Dynamic file":
                     staticFile = false;
                     newFile = true;
-                    mp.createNewDynFile(fileName.getText(), Integer.parseInt(blockFactor.getText()));
+                    mp.createNewDynFile(fileName_NewD.getText(), Integer.parseInt(blockFactor_NewD.getText()));
                     createMainPanel();
                     addMainPanel();
                     break;
@@ -671,54 +675,51 @@ public class GUI extends JFrame{
                     getContentPane().add(mainPanel);
                     break;
                 case "B1_CONFIRM":
-                    //arr_logs = mp.task1(rod_cislo.getText(), nemocnica.getText());
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task1(rod_cislo.getText());
+                    str_logs = processLogs(arr_logs);
                     createPanel1();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel1);
                     break;
                 case "B2_CONFIRM":
-                    //arr_logs = mp.task2(nemocnica.getText(), meno.getText(), priezvisko.getText());
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task2(rod_cislo.getText(), Integer.parseInt( id.getText()));
+                    str_logs = processLogs(arr_logs);
                     createPanel2();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel2);
                     break;
 
                 case "B3_CONFIRM":
-                    //arr_logs = mp.task3(rod_cislo.getText(), nemocnica.getText(), LocalDateTime.parse(d_hosp.getText(), formatter) , diagnoza.getText());
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task3(rod_cislo.getText(), LocalDateTime.parse(d_hosp.getText(), formatter) , diagnoza.getText());
+                    str_logs = processLogs(arr_logs);
                     createPanel3();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel3);
                     break;
                 case "B4_CONFIRM":
-                    //arr_logs = mp.task4(rod_cislo.getText(), nemocnica.getText(), LocalDateTime.parse(d_k_hosp.getText(),formatter));
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task4( Integer.parseInt(id.getText()), rod_cislo.getText(), LocalDateTime.parse(d_k_hosp.getText(),formatter));
+                    str_logs = processLogs(arr_logs);
                     createPanel4();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel4);
                     break;
                 case "B5_CONFIRM":
-                    //arr_logs = mp.task5(nemocnica.getText(), LocalDateTime.parse(d_hosp_od.getText(),formatter), LocalDateTime.parse(d_hosp_do.getText(),formatter));
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task5(meno.getText(), priezvisko.getText(), rod_cislo.getText(), LocalDate.parse(d_narodenia.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")), Integer.parseInt(poistovna.getText()));
+                    str_logs = processLogs(arr_logs);
                     createPanel5();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel5);
                     break;
                 case "B6_CONFIRM":
-                    //arr_logs = mp.task6(meno.getText(), priezvisko.getText(), rod_cislo.getText(), LocalDate.parse(d_narodenia.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy")), poistovna.getText());
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task6(rod_cislo.getText(), Integer.parseInt(id.getText()));
+                    str_logs = processLogs(arr_logs);
                     createPanel6();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel6);
                     break;
                 case "B7_CONFIRM":
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                    LocalDateTime mesiac_rok = LocalDateTime.parse("01-" + d_mesiac_rok.getText() + " 00:00", formatter);
-
-                    //arr_logs = mp.task7(nemocnica.getText(), mesiac_rok);
-                    //str_logs = processLogs(arr_logs);
+                    arr_logs = mp.task7(rod_cislo.getText());
+                    str_logs = processLogs(arr_logs);
                     createPanel7();
                     label_logs.setText(str_logs);
                     getContentPane().add(panel7);

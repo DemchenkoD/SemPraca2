@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 public class Main {
 
-    private static Hashing<Pacient> propertyHashing;
-
-
-
     public static void main(String[] args) {
 
         GUI gui = new GUI();

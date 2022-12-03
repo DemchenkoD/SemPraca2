@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Program {
-    private Hashing file;
+    private Hashing<Pacient> file;
     private Pacient dataInitial;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -45,44 +45,85 @@ public class Program {
         }
         return logs;
     }
-    public ArrayList<String> task1 (String pRodCislo, String pNazovNemocnice) {
+    public ArrayList<String> task1 (String pRodCislo) {
         ArrayList<String> logs = new ArrayList<>();
-
+        Pacient p = file.Find(new Pacient("", "", pRodCislo, null, -99));
+        if (p != null)
+            logs.add(p.toStringFull());
+        else
+            logs.add("Pacient neexistuje");
         return logs;
     }
 
-    public ArrayList<String> task2 (String pNazovNemocnice,String pMeno, String pPriezvisko) {
+    public ArrayList<String> task2 (String pRodCislo, int pId) {
         ArrayList<String> logs = new ArrayList<>();
-
+        Pacient p = file.Find(new Pacient("", "", pRodCislo, null, -99));
+        if (p != null) {
+            Hospitalizacia h = p.getHospitalizacia(pId);
+            if (h != null)
+                logs.add(h.toString());
+            else
+                logs.add("Hospitaizacia neexistuje");
+        }else
+            logs.add("Pacient neexistuje");
         return logs;
     }
-    public ArrayList<String> task3(String pRodCislo, String pNazovNemocnice, LocalDateTime pZaciatok, String pDiagnoza) {
-
+    public ArrayList<String> task3(String pRodCislo, LocalDateTime pZaciatok, String pDiagnoza) {
         ArrayList<String> logs = new ArrayList<String>();
-
+        Pacient p = file.Find(new Pacient("", "", pRodCislo, null, -99));
+        if (p != null) {
+            if (p.createHospitalizacia(pZaciatok,pDiagnoza)) {
+                file.Update(p);
+                logs.add("Hospitalizacia uspesne vytvorena");
+            }
+            else
+                logs.add("Hospitalizacia nebola vytvorena");
+        }else
+            logs.add("Pacient neexistuje");
         return logs;
     }
-    public ArrayList<String> task4(String pRodCislo, String pNazovNemocnice, LocalDateTime pKoniec) {
+    public ArrayList<String> task4(int id, String pRodCislo, LocalDateTime pKoniec) {
         ArrayList<String> logs = new ArrayList<String>();
-
+        Pacient p = file.Find(new Pacient("", "", pRodCislo, null, -99));
+        if (p != null) {
+            if (p.closeHospitalizacia(id, pKoniec)) {
+                file.Update(p);
+                logs.add("Hospitalizacia uspesne ukoncena");
+            }
+            else
+                logs.add("Hospitalizacia nebola ukoncena");
+        }else
+            logs.add("Pacient neexistuje");
         return logs;
     }
-    public ArrayList<String> task5(String pNazovNemocnice, LocalDateTime pOd, LocalDateTime pDo) {
+    public ArrayList<String> task5(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, int pZdr_poistovna) {
         ArrayList<String> logs = new ArrayList<>();
-
+        if (file.Insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
+                logs.add("Pacient bol uspesne pridany");
+            else
+                logs.add("Chyba");
         return logs;
     }
-    public ArrayList<String> task6(String pMeno, String pPriezvisko, String pRod_cislo, LocalDate pD_narodenia, String pZdr_poistovna) {
+    public ArrayList<String> task6(String pRodCislo, int pId) {
         ArrayList<String> logs = new ArrayList<String>();
-        //if (pacienti.insert(new Pacient(pMeno, pPriezvisko, pRod_cislo, pD_narodenia, pZdr_poistovna)))
-        //    logs.add("Pacient bol uspesne pridany");
-        //else
-        //    logs.add("Chyba");
+        Pacient p = file.Find(new Pacient("", "", pRodCislo, null, -99));
+        if (p != null) {
+            if (p.removeHospitalizacia(pId)) {
+                file.Update(p);
+                logs.add("Hospitalizacia uspesne vymazana");
+            }
+            else
+                logs.add("Hospitalizacia nebola vymazana");
+        }else
+            logs.add("Pacient neexistuje");
         return logs;
     }
-    public ArrayList<String> task7( String pNazovNemocnice, LocalDateTime pMesiac) {
+    public ArrayList<String> task7( String paRodCislo) {
         ArrayList<String> logs = new ArrayList<>();
-
+        if (file.Delete(new Pacient("", "", paRodCislo, null, -99)))
+            logs.add("Patient successfully deleted");
+        else
+            logs.add("Error");
         //logs.addAll(n.vytvorit_doklady(pMesiac));
 
         return logs;

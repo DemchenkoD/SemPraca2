@@ -89,9 +89,53 @@ public class Pacient implements IData<Pacient> {
             return false;
         }
     }
-    public boolean addHospitalizaciaObj(Hospitalizacia h) {
-        hospitalizacie.add(h);
-        return true;
+    public boolean createHospitalizacia(LocalDateTime pD_zaciatku, String pDiagnoza ) {
+        int id;
+        Random r = new Random();
+        do {
+            id = r.nextInt(1000);
+        } while (idHospitalizacie.contains(id));
+        if (idHospitalizacie.size() < 10) {
+            hospitalizacie.add(idHospitalizacie.size(), new Hospitalizacia(id, pD_zaciatku, null, pDiagnoza));
+            hospitalizacie.remove(hospitalizacie.size() - 1);
+            idHospitalizacie.add(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean removeHospitalizacia(int id) {
+        Hospitalizacia h = getHospitalizacia(id);
+        if (h != null) {
+            hospitalizacie.remove(h);
+            hospitalizacie.add(new Hospitalizacia());
+            int index = -1;
+            for (int i = 0; i < idHospitalizacie.size(); i++) {
+                if (idHospitalizacie.get(i) == id)
+                    index = i;
+            }
+            if (index != -1)
+                idHospitalizacie.remove(index);
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean closeHospitalizacia(int id, LocalDateTime pD_koniec) {
+        Hospitalizacia h = getHospitalizacia(id);
+        if (h != null) {
+            h.setD_konca(pD_koniec);
+            return true;
+        }
+        else
+            return false;
+    }
+    public Hospitalizacia getHospitalizacia(int id){
+        for (int i = 0; i < idHospitalizacie.size(); i++) {
+            if (hospitalizacie.get(i).getId() == id)
+                return hospitalizacie.get(i);
+        }
+        return null;
     }
 
     public ArrayList<Hospitalizacia> getHospitalizacie() {
@@ -120,6 +164,15 @@ public class Pacient implements IData<Pacient> {
      */
     public String toString() {
         return (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna);
+    }
+    public String toStringFull() {
+        String result =  (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna + '\n');
+        for (int i = 0; i < idHospitalizacie.size(); i ++) {
+            result += hospitalizacie.get(i).toString(); //TODO remove
+        }
+        if (idHospitalizacie.size() == 0)
+            result += "Patient has no hospitalizations";
+        return result;
     }
 
     public String toStringHospitalizacie() {

@@ -143,7 +143,29 @@ public class Hashing<T extends IData> {
 
         return false;
     }
+    public boolean Update(T data) {
+        Block<T> b;
+        BitSet hash = data.getHash();
 
+        b = new Block<>(blockFactor, data.getClass());
+        long adresaBloku = hash.toLongArray()[0] % numbOfBlocks * b.getSize();
+        byte[] blockBytes = new byte[b.getSize()];
+        try {
+
+            file.seek(adresaBloku);
+            file.read(blockBytes);
+            b.FromByteArray(blockBytes);
+            if (b.updateRecord(data)) {
+                file.seek(adresaBloku);
+                file.write(b.ToByteArray());
+                return true;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Hashing.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
+    }
 
     public boolean Delete(T data) {
 

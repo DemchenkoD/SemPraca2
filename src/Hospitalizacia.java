@@ -88,6 +88,12 @@ public class Hospitalizacia implements IData<Hospitalizacia>{
         else
             System.out.println("H\t" + d_zaciatku.format(formatter) + '\t' + "null" + '\t' + diagnoza +'\n');
     }
+    public String toString() {
+        if (d_konca != null)
+            return (id +"\t" + d_zaciatku.format(formatter) + '\t' + d_konca.format(formatter) + '\t' + diagnoza +'\n');
+        else
+            return (id +"\t" + d_zaciatku.format(formatter) + '\t' + "---------------------------" + '\t' + diagnoza +'\n');
+    }
 
     @Override
     public byte[] ToByteArray() {

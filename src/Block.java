@@ -37,7 +37,7 @@ public class Block<T extends IData> implements IRecord {
             }
 
         }
-        if (indexExists != -99) {
+        if (indexExists != -99) { //todo return false, don't override data
             records.remove(indexExists);
             records.add(indexExists, paNew);
             return true;
@@ -46,6 +46,23 @@ public class Block<T extends IData> implements IRecord {
             records.remove(ValidCount);
             records.add(ValidCount, paNew);
             ValidCount++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateRecord(T paNew) {
+        int indexExists = -99;
+        for (int i = 0; i < records.size(); i++){
+            if (records.get(i).myEquals(paNew)) {
+                indexExists = i;
+                break;
+            }
+
+        }
+        if (indexExists != -99) {
+            records.remove(indexExists);
+            records.add(indexExists, paNew);
             return true;
         }
         return false;
