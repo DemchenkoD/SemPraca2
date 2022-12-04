@@ -147,7 +147,7 @@ public class Pacient implements IData<Pacient> {
     public String toStringFull() {
         String result =  (rod_cislo + '\t' + meno + '\t' + priezvisko + '\t' + d_narodenia.toString() + '\t' + poistovna + '\n');
         for (int i = 0; i < idHospitalizacie.size(); i ++) {
-            result += '\t' + hospitalizacie.get(i).toString(); //TODO remove
+            result += '\t' + hospitalizacie.get(i).toString();
         }
         if (idHospitalizacie.size() == 0)
             result += "Pacient nema ziadne hospitalizacie\n";
@@ -193,7 +193,7 @@ public class Pacient implements IData<Pacient> {
     public void print() {
         System.out.println("P\t" +  meno + '\t' + priezvisko + '\t' + rod_cislo + '\t'+ d_narodenia.toString() + '\t' + poistovna + '\n');
         for (int i = 0; i < idHospitalizacie.size(); i ++) {
-            //hospitalizacie.get(i).print(); //TODO remove
+            hospitalizacie.get(i).print();
         }
     }
 
@@ -243,7 +243,7 @@ public class Pacient implements IData<Pacient> {
         ByteArrayInputStream hlpByteArrayInputStream = new ByteArrayInputStream(paArray) ;
         DataInputStream hlpInStream = new DataInputStream(hlpByteArrayInputStream) ;
         try {
-            //ID = hiprnstrean.readInt();
+
             rod_cislo = "";
             for (int i= 0; i < maxLengtRodCislo; i++) {
                 rod_cislo += hlpInStream.readChar();
@@ -298,9 +298,6 @@ public class Pacient implements IData<Pacient> {
 
     public boolean fullyCompare(Pacient p) {
         boolean ok = true;
-        if(p == null)
-            System.out.println("NULL");
-
 
         try {
             if (!this.meno.equals(p.meno))
@@ -327,7 +324,7 @@ public class Pacient implements IData<Pacient> {
             return ok;
         } catch (NullPointerException n ) {
             System.out.println("Error");
-            return ok;
+            return false;
         }
 
     }

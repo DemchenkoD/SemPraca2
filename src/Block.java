@@ -37,10 +37,10 @@ public class Block<T extends IData> implements IRecord {
             }
 
         }
-        if (indexExists != -99) { //todo return false, don't override data
-            records.remove(indexExists);
-            records.add(indexExists, paNew);
-            return true;
+        if (indexExists != -99) { //do not override data
+            //records.remove(indexExists);
+            //records.add(indexExists, paNew);
+            return false;
         }
         if (ValidCount < blockFactor) {
             records.remove(ValidCount);
@@ -68,7 +68,7 @@ public class Block<T extends IData> implements IRecord {
         return false;
     }
     public void vypis() {
-        System.out.println(toString());
+        System.out.println(this.toString());
     }
     public String toString() {
         String result = ("________________________NEW BLOCK_______________SIZE =" + ValidCount + '\n');

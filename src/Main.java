@@ -10,21 +10,21 @@ public class Main {
 
         GUI gui = new GUI();
 
-        //Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), 99);
-
-        //File myObj = new File("newFile.txt"); //TODO remove
-        //myObj.delete(); //TODO remove
-        //Generator g = new Generator();
-        //ArrayList<Pacient> pacienti = g.genPatientsForFile(10);
-        //DynamicHashing<Pacient> hashing2 = new DynamicHashing<>("newFile.txt", "treeFile", "FreeBlocks", 1, pacient);
-
+        //Testovanie rychlosti vkladania, mazania a hladania
+        /*
+        Pacient pacient = new Pacient("Dmytro", "Demchenko", "0712200196", LocalDate.now(), 99);
+        Hashing<Pacient> hashing1 = new Hashing<>("testing1.txt", 10, 100000, pacient);
+        DynamicHashing<Pacient> hashing2 = new DynamicHashing<>("testing2.txt", 10, pacient);
+        TestClass test = new TestClass();
         System.out.println("-----------------------------------------------------");
-
-        //TestClass test = new TestClass();
-        //test.testFile(hashing2, 500 );
-        //test.testDynamicFile(hashing2, 500);
-        //test.testFile2(hashing2, 500);
+        System.out.println("Static file");
+        test.testFileSpeed(hashing1, 50000);
         System.out.println("-----------------------------------------------------");
+        System.out.println("Dynamic file");
+        test.testFileSpeed(hashing2, 50000);
+        System.out.println("-----------------------------------------------------");
+        */
+
 
     }
 }

@@ -218,10 +218,10 @@ public class Hashing<T extends IData> {
                 result.add(b.toString());
                 counter++;
             } catch (EOFException e) {
-                //System.out.println("EOF");
+                System.out.println("EOF");
                 break;
             } catch (IOException e) {
-                //System.out.println("Error");
+                System.out.println("Error");
             }
         }
         return result;

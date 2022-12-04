@@ -568,14 +568,6 @@ public class GUI extends JFrame{
         b7_confirm = new JButton("B7_CONFIRM");
         b7_confirm.addActionListener(new addButtonListener());
         b7_confirm.setBounds(200, 400, 120, 30);
-        counter++;
-
-        b_gen = new JButton("Generate Data");
-        b_gen.addActionListener(new addButtonListener());
-        b_gen.setBounds(250, counter *50 + 20, 400, 40);
-        b_gen_confirm = new JButton("B_GEN_CONFIRM");
-        b_gen_confirm.addActionListener(new addButtonListener());
-        b_gen_confirm.setBounds(200, 400, 120, 30);
         counter=1;
 
         b_vypis = new JButton("Vypis celeho suboru");
@@ -591,6 +583,13 @@ public class GUI extends JFrame{
         b_genConf_confirm = new JButton("B_GENCONF_CONFIRM");
         b_genConf_confirm.addActionListener(new addButtonListener());
         b_genConf_confirm.setBounds(200, 400, 120, 30);
+        counter++;
+        b_gen = new JButton("Generate Data");
+        b_gen.addActionListener(new addButtonListener());
+        b_gen.setBounds(500, counter *50, 400, 40);
+        b_gen_confirm = new JButton("B_GEN_CONFIRM");
+        b_gen_confirm.addActionListener(new addButtonListener());
+        b_gen_confirm.setBounds(200, 400, 120, 30);
     }
 
     private void addMainPanel() {

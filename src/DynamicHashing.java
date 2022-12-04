@@ -6,21 +6,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DynamicHashing<T extends IData> extends Hashing<T> {
-    //private String fileName;
-    //private String treeFileName;
-    //private Strom strom;
-    //private String freeBlocksFileName;
-    //int blockSize;
-    //int blockFactor;
-    private IVrchol Root;
-    //private RandomAccessFile file;
 
-    public ArrayList<Long> freeAdresses; //TODO change to private
-    //private T dataInitial;
+    private IVrchol Root;
+
+    private ArrayList<Long> freeAdresses;
 
     public DynamicHashing(String paFileName, int paBlockFactor, T paDataInitial) {
         super(paFileName, paBlockFactor, paDataInitial);
-        //blockFactor = paBlockFactor;
         Root = new ExternyVrchol(null, -1);
         freeAdresses = new ArrayList<>();
 
@@ -153,7 +145,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                 adresaBloku = extVrchol.getAdresaBloku();
 
 
-                for (T t_data : allData) //TODO check
+                for (T t_data : allData)
                     blok.insertRecord(t_data);
 
                 file.seek(adresaBloku);
@@ -338,7 +330,6 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
             } else {
                 r = new InternyVrchol(vrchol.getParent(), vrchol.getParent().getIndexSplitter() + 1);
                 vrchol.getParent().setSon(vrchol, r);
-                //vrchol.getParent().setSon(extVrchol, r);
             }
             r.setLavy(new ExternyVrchol(r, -1));
             r.setPravy(new ExternyVrchol(r, -1));
@@ -504,7 +495,7 @@ public class DynamicHashing<T extends IData> extends Hashing<T> {
                         ((InternyVrchol) tmp).setPravy(new ExternyVrchol((InternyVrchol) tmp, -1));
                     }
                     if (tmp instanceof ExternyVrchol) {
-                        transform((ExternyVrchol) tmp); //TODO change
+                        transform((ExternyVrchol) tmp);
                         tmp = tmp.getParent();
                         i = i - 2;
                         continue;
