@@ -68,7 +68,6 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(100,20,165,25);
-        rod_cislo.setText("0712019165"); //todo remove
         panel1.add(rod_cislo);
 
         label_logs = new JTextArea();
@@ -98,7 +97,6 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(100,20,165,25);
-        rod_cislo.setText("0712019165"); //todo remove
         panel2.add(rod_cislo);
 
         JLabel label_id = new JLabel("ID :");
@@ -136,7 +134,6 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
-        rod_cislo.setText("0712019165"); //todo remove
         panel3.add(rod_cislo);
 
         JLabel label_d_hosp = new JLabel("Datum Hospitalizacie");
@@ -154,7 +151,6 @@ public class GUI extends JFrame{
         panel3.add(label_diagnoza);
 
         diagnoza = new JTextField(10);
-        diagnoza.setText("Diagnoza"); //todo remove
         diagnoza.setBounds(150,120,165,25);
         panel3.add(diagnoza);
 
@@ -177,7 +173,6 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
-        rod_cislo.setText("0712019165"); //todo remove
         panel4.add(rod_cislo);
 
         JLabel label_id = new JLabel("ID");
@@ -216,7 +211,6 @@ public class GUI extends JFrame{
 
         rod_cislo = new JTextField(10);
         rod_cislo.setBounds(150,20,165,25);
-        rod_cislo.setText("0712019165"); //todo remove
         panel5.add(rod_cislo);
 
         JLabel label_meno = new JLabel("Meno");
@@ -225,7 +219,6 @@ public class GUI extends JFrame{
 
         meno = new JTextField(10);
         meno.setBounds(150,70,165,25);
-        meno.setText("Dima"); //todo remove
         panel5.add(meno);
 
         JLabel label_priezvisko = new JLabel("Priezvisko");
@@ -234,7 +227,6 @@ public class GUI extends JFrame{
 
         priezvisko = new JTextField(15);
         priezvisko.setBounds(150,120,165,25);
-        priezvisko.setText("Demchenko"); //todo remove
         panel5.add(priezvisko);
 
         JLabel label_d_narodenia = new JLabel("Datum Narodenia");
@@ -244,7 +236,6 @@ public class GUI extends JFrame{
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         d_narodenia = new JFormattedTextField(df);
         d_narodenia.setBounds(150,170,165,25);
-        d_narodenia.setText("07-12-2001"); //todo remove
         panel5.add(d_narodenia);
 
         JLabel label_poistovna = new JLabel("Poistovna");
